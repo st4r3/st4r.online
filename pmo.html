@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOYYY</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a90e2;
+            --secondary: #357abd;
+            --background: #1e1e2e;
+            --card-bg: #282838;
+            --text: #e0e0e0;
+            --accent: #9b59b6;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --error: #e74c3c;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 0% 0%, rgba(155, 89, 182, 0.1) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--primary);
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(74, 144, 226, 0.1), rgba(155, 89, 182, 0.1));
+            z-index: 0;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+            position: relative;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(74, 144, 226, 0.2);
+        }
+
+        .section:hover::before {
+            opacity: 1;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: var(--primary);
+            margin: 25px 0;
+            font-size: 1.7em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 15px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid var(--primary);
+            position: relative;
+        }
+
+        code {
+            color: var(--success);
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .quiz {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 1px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .quiz:hover {
+            background: rgba(74, 144, 226, 0.15);
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .quiz-options {
+            margin-left: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .correct {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid var(--success);
+        }
+
+        .incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--error);
+        }
+
+        .nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 1000;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav a {
+            color: var(--primary);
+            text-decoration: none;
+            margin: 0 12px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .warning {
+            background: rgba(231, 76, 60, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid var(--error);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tip {
+            background: rgba(46, 204, 113, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid var(--success);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .code-block {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .code-block::before {
+            content: attr(data-title);
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: var(--primary);
+            color: #fff;
+            padding: 4px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.4s;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        .beginner { background: var(--success); color: #fff; }
+        .intermediate { background: var(--warning); color: #000; }
+        .advanced { background: var(--error); color: #fff; }
+
+        .function-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .function-card {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .function-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.2);
+        }
+
+        .function-name {
+            color: var(--primary);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .function-description {
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+
+        .function-example {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .search-box input::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+
+        .toc {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid var(--primary);
+        }
+
+        .toc h3 {
+            margin-bottom: 20px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 10px 0;
+        }
+
+        .toc a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .toc a:hover {
+            transform: translateX(5px);
+            color: var(--accent);
+        }
+
+        .version-badge {
+            background: var(--accent);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="#basics">Basics</a>
+        <a href="#advanced">Advanced</a>
+        <a href="#functions">Functions</a>
+        <a href="#game-dev">Game Dev</a>
+        <a href="#quiz">Quiz</a>
+    </div>
+
+    <header>
+        <h1>boYYYYYYYY <span class="version-badge">v5.4</span></h1>
+        <p>james is a good boy</p>
+    </header>
+
+    <div class="container">
+        <div class="search-box">
+            <input type="text" placeholder="Search Lua functions and concepts..." id="searchInput">
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#basics">1. Lua Basics</a></li>
+                <li><a href="#advanced">2. Advanced Concepts</a></li>
+                <li><a href="#functions">3. Standard Library Functions</a></li>
+                <li><a href="#game-dev">4. Game Development</a></li>
+                <li><a href="#quiz">5. Knowledge Check</a></li>
+            </ul>
+        </div>
+
+        <section id="basics" class="section">
+            <h2>Lua Basics <span class="difficulty beginner">Beginner</span></h2>
+            <p>Master the fundamentals of Lua programming with these essential concepts.</p>
+            
+            <h3>Variables and Data Types</h3>
+            <div class="code-block" data-title="Variables Example">
+                <pre><code>-- Basic variables
+local name = "John"
+local age = 25
+local isStudent = true
+
+-- Tables (Arrays)
+local fruits = {"apple", "banana", "orange"}
+print(fruits[1]) -- Outputs: apple
+
+-- Tables (Dictionaries)
+local person = {
+    name = "John",
+    age = 25,
+    isStudent = true
+}
+print(person.name) -- Outputs: John
+
+-- Multiple assignment
+local x, y = 10, 20
+x, y = y, x -- Swap values
+
+-- Type checking
+print(type(name))    -- string
+print(type(age))     -- number
+print(type(isStudent)) -- boolean
+print(type(fruits))  -- table</code></pre>
+            </div>
+
+            <h3>Functions</h3>
+            <div class="code-block" data-title="Functions Example">
+                <pre><code>-- Basic function
+function greet(name)
+    return "Hello, " .. name .. "!"
+end
+
+-- Function with multiple returns
+function calculate(x, y)
+    return x + y, x - y, x * y
+end
+
+-- Anonymous functions
+local square = function(x) return x * x end
+
+-- Function with default parameters
+function createUser(name, age, isAdmin)
+    age = age or 18  -- Default age if not provided
+    isAdmin = isAdmin or false
+    return {name = name, age = age, isAdmin = isAdmin}
+end
+
+-- Variadic functions
+function sum(...)
+    local total = 0
+    for _, v in ipairs({...}) do
+        total = total + v
+    end
+    return total
+end</code></pre>
+            </div>
+
+            <h3>Control Structures</h3>
+            <div class="code-block" data-title="Control Structures Example">
+                <pre><code>-- If statements
+if age >= 18 then
+    print("Adult")
+elseif age >= 13 then
+    print("Teenager")
+else
+    print("Child")
+end
+
+-- For loops
+for i = 1, 5 do
+    print(i)
+end
+
+-- For loops with step
+for i = 10, 1, -2 do
+    print(i)
+end
+
+-- While loops
+local count = 0
+while count < 5 do
+    count = count + 1
+    print(count)
+end
+
+-- Repeat until
+local num = 1
+repeat
+    num = num + 1
+until num > 5
+
+-- Break and continue
+for i = 1, 10 do
+    if i == 5 then
+        break
+    end
+    if i % 2 == 0 then
+        goto continue
+    end
+    print(i)
+    ::continue::
+end</code></pre>
+            </div>
+        </section>
+
+        <section id="advanced" class="section">
+            <h2>Advanced Lua Concepts <span class="difficulty intermediate">Intermediate</span></h2>
+            
+            <h3>Object-Oriented Programming in Lua</h3>
+            <div class="code-block" data-title="OOP Example">
+                <pre><code>-- Class implementation
+local Class = {}
+Class.__index = Class
+
+function Class.new(name)
+    local self = setmetatable({}, Class)
+    self.name = name
+    self.value = 0
+    return self
+end
+
+function Class:setValue(value)
+    self.value = value
+end
+
+function Class:getValue()
+    return self.value
+end
+
+-- Inheritance
+local SubClass = {}
+SubClass.__index = SubClass
+setmetatable(SubClass, {__index = Class})
+
+function SubClass.new(name, extra)
+    local self = Class.new(name)
+    setmetatable(self, SubClass)
+    self.extra = extra
+    return self
+end
+
+-- Usage
+local obj = SubClass.new("test", "extra")
+obj:setValue(42)
+print(obj:getValue())  -- Outputs: 42</code></pre>
+            </div>
+
+            <h3>Advanced Table Operations</h3>
+            <div class="code-block" data-title="Table Operations">
+                <pre><code>-- Table deep copy
+function deepCopy(original)
+    local copy = {}
+    for k, v in pairs(original) do
+        if type(v) == "table" then
+            copy[k] = deepCopy(v)
+        else
+            copy[k] = v
+        end
+    end
+    return copy
+end
+
+-- Table filtering
+function filter(t, predicate)
+    local result = {}
+    for k, v in pairs(t) do
+        if predicate(v) then
+            result[k] = v
+        end
+    end
+    return result
+end
+
+-- Table mapping
+function map(t, transform)
+    local result = {}
+    for k, v in pairs(t) do
+        result[k] = transform(v)
+    end
+    return result
+end
+
+-- Usage
+local numbers = {1, 2, 3, 4, 5}
+local doubled = map(numbers, function(n) return n * 2 end)
+local even = filter(numbers, function(n) return n % 2 == 0 end)</code></pre>
+            </div>
+
+            <h3>Advanced String Manipulation</h3>
+            <div class="code-block" data-title="String Operations">
+                <pre><code>-- String pattern matching
+local text = "Hello, World! 123"
+local words = {}
+for word in text:gmatch("%w+") do
+    table.insert(words, word)
+end
+
+-- String formatting
+local function formatString(template, ...)
+    local args = {...}
+    return template:gsub("{(%d+)}", function(n)
+        return tostring(args[tonumber(n)])
+    end)
+end
+
+-- String validation
+local function isValidEmail(email)
+    return email:match("^[%w.]+@[%w.]+%.%w+$") ~= nil
+end
+
+-- Usage
+local formatted = formatString("Hello, {1}! Your score is {2}", "Player", 100)
+local isEmail = isValidEmail("test@example.com")</code></pre>
+            </div>
+        </section>
+
+        <section id="performance" class="section">
+            <h2>Performance Optimization <span class="difficulty advanced">Advanced</span></h2>
+            
+            <h3>Memory Management</h3>
+            <div class="code-block" data-title="Memory Management">
+                <pre><code>-- Object pooling
+local ObjectPool = {}
+ObjectPool.__index = ObjectPool
+
+function ObjectPool.new(createFunc, resetFunc)
+    local self = setmetatable({}, ObjectPool)
+    self.pool = {}
+    self.createFunc = createFunc
+    self.resetFunc = resetFunc
+    return self
+end
+
+function ObjectPool:get()
+    local obj = table.remove(self.pool)
+    if not obj then
+        obj = self.createFunc()
+    end
+    return obj
+end
+
+function ObjectPool:release(obj)
+    if self.resetFunc then
+        self.resetFunc(obj)
+    end
+    table.insert(self.pool, obj)
+end
+
+-- Usage
+local pool = ObjectPool.new(
+    function() return {x = 0, y = 0} end,
+    function(obj) obj.x = 0; obj.y = 0 end
+)</code></pre>
+            </div>
+
+            <h3>Optimization Techniques</h3>
+            <div class="code-block" data-title="Optimization">
+                <pre><code>-- Local variable caching
+local function optimizedLoop()
+    local math_floor = math.floor
+    local table_insert = table.insert
+    local result = {}
+    
+    for i = 1, 1000 do
+        table_insert(result, math_floor(i * 1.5))
+    end
+    return result
+end
+
+-- Table pre-allocation
+local function preAllocatedTable(size)
+    local t = table.create(size)
+    for i = 1, size do
+        t[i] = i
+    end
+    return t
+end
+
+-- Metatable optimization
+local function createOptimizedObject()
+    local mt = {
+        __index = function(t, k)
+            return t._data[k]
+        end,
+        __newindex = function(t, k, v)
+            t._data[k] = v
+        end
+    }
+    return setmetatable({_data = {}}, mt)
+end</code></pre>
+            </div>
+        </section>
+
+        <section id="networking" class="section">
+            <h2>Networking and Remote Events <span class="difficulty advanced">Advanced</span></h2>
+            
+            <h3>Remote Event Handling</h3>
+            <div class="code-block" data-title="Remote Events">
+                <pre><code>-- Remote event setup
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+
+-- Server-side handling
+RemoteEvent.OnServerEvent:Connect(function(player, ...)
+    local args = {...}
+    -- Handle the event
+    print("Received event from", player.Name)
+    -- Process data
+    processData(args)
+    -- Send response
+    RemoteEvent:FireClient(player, "Response", processedData)
+end)
+
+-- Client-side handling
+RemoteEvent.OnClientEvent:Connect(function(...)
+    local args = {...}
+    -- Handle the response
+    updateUI(args)
+end)
+
+-- Secure data validation
+local function validateData(data)
+    if type(data) ~= "table" then return false end
+    -- Add validation rules
+    return true
+end</code></pre>
+            </div>
+
+            <h3>Data Serialization</h3>
+            <div class="code-block" data-title="Data Serialization">
+                <pre><code>-- JSON serialization
+local HttpService = game:GetService("HttpService")
+
+local function serializeData(data)
+    return HttpService:JSONEncode(data)
+end
+
+local function deserializeData(json)
+    return HttpService:JSONDecode(json)
+end
+
+-- Custom serialization
+local function serializeTable(t)
+    local result = {}
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            result[k] = serializeTable(v)
+        else
+            result[k] = v
+        end
+    end
+    return result
+end</code></pre>
+            </div>
+        </section>
+
+        <section id="ui" class="section">
+            <h2>UI Development <span class="difficulty intermediate">Intermediate</span></h2>
+            
+            <h3>Dynamic UI Creation</h3>
+            <div class="code-block" data-title="UI Creation">
+                <pre><code>-- UI component creation
+local function createButton(text, onClick)
+    local button = Instance.new("TextButton")
+    button.Text = text
+    button.Size = UDim2.new(0, 200, 0, 50)
+    button.Position = UDim2.new(0.5, 0, 0.5, 0)
+    button.AnchorPoint = Vector2.new(0.5, 0.5)
+    
+    -- Style the button
+    button.BackgroundColor3 = Color3.fromRGB(74, 144, 226)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 18
+    
+    -- Add hover effect
+    button.MouseEnter:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(53, 122, 189)
+    end)
+    
+    button.MouseLeave:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(74, 144, 226)
+    end)
+    
+    -- Add click handler
+    button.MouseButton1Click:Connect(onClick)
+    
+    return button
+end
+
+-- UI layout system
+local function createLayout(parent, layoutType)
+    local layout = Instance.new("UIGridLayout")
+    layout.Parent = parent
+    layout.CellSize = UDim2.new(0, 100, 0, 100)
+    layout.CellPadding = UDim2.new(0, 10, 0, 10)
+    layout.SortOrder = layoutType or Enum.SortOrder.LayoutOrder
+    return layout
+end</code></pre>
+            </div>
+
+            <h3>UI Animation System</h3>
+            <div class="code-block" data-title="UI Animation">
+                <pre><code>-- Tween service setup
+local TweenService = game:GetService("TweenService")
+
+-- Animation presets
+local AnimationPresets = {
+    FadeIn = {
+        Time = 0.5,
+        Style = Enum.EasingStyle.Quad,
+        Direction = Enum.EasingDirection.Out
+    },
+    SlideIn = {
+        Time = 0.7,
+        Style = Enum.EasingStyle.Back,
+        Direction = Enum.EasingDirection.Out
+    }
+}
+
+-- Animate UI element
+local function animateUI(element, preset, properties)
+    local tweenInfo = TweenInfo.new(
+        preset.Time,
+        preset.Style,
+        preset.Direction
+    )
+    
+    local tween = TweenService:Create(element, tweenInfo, properties)
+    tween:Play()
+    return tween
+end
+
+-- Usage
+local function showNotification(text)
+    local notification = createNotification(text)
+    animateUI(notification, AnimationPresets.FadeIn, {
+        Position = UDim2.new(0.5, 0, 0.9, 0),
+        Transparency = 0
+    })
+end</code></pre>
+            </div>
+        </section>
+
+        <section id="security" class="section">
+            <h2>Security Best Practices <span class="difficulty advanced">Advanced</span></h2>
+            
+            <h3>Input Validation</h3>
+            <div class="code-block" data-title="Input Validation">
+                <pre><code>-- Input sanitization
+local function sanitizeInput(input)
+    if type(input) ~= "string" then return "" end
+    return input:gsub("[^%w%s%-%.]", "")
+end
+
+-- Data validation
+local function validateUserData(data)
+    local required = {"username", "email", "age"}
+    for _, field in ipairs(required) do
+        if not data[field] then
+            return false, "Missing required field: " .. field
+        end
+    end
+    
+    if type(data.age) ~= "number" or data.age < 13 then
+        return false, "Invalid age"
+    end
+    
+    return true
+end
+
+-- Rate limiting
+local RateLimiter = {}
+RateLimiter.__index = RateLimiter
+
+function RateLimiter.new(maxRequests, timeWindow)
+    local self = setmetatable({}, RateLimiter)
+    self.maxRequests = maxRequests
+    self.timeWindow = timeWindow
+    self.requests = {}
+    return self
+end
+
+function RateLimiter:checkLimit(userId)
+    local now = os.time()
+    self.requests[userId] = self.requests[userId] or {}
+    
+    -- Clean old requests
+    while #self.requests[userId] > 0 and 
+          now - self.requests[userId][1] > self.timeWindow do
+        table.remove(self.requests[userId], 1)
+    end
+    
+    if #self.requests[userId] >= self.maxRequests then
+        return false
+    end
+    
+    table.insert(self.requests[userId], now)
+    return true
+end</code></pre>
+            </div>
+
+            <h3>Secure Communication</h3>
+            <div class="code-block" data-title="Secure Communication">
+                <pre><code>-- Encryption helper
+local function encrypt(data, key)
+    local result = ""
+    for i = 1, #data do
+        local byte = string.byte(data, i)
+        local keyByte = string.byte(key, (i-1) % #key + 1)
+        result = result .. string.char(bit.bxor(byte, keyByte))
+    end
+    return result
+end
+
+-- Secure data transmission
+local function sendSecureData(player, data, key)
+    local encrypted = encrypt(data, key)
+    RemoteEvent:FireClient(player, "SecureData", encrypted)
+end
+
+-- Data integrity check
+local function verifyIntegrity(data, hash)
+    local computedHash = game:GetService("HashService"):ComputeHash(data)
+    return computedHash == hash
+end</code></pre>
+            </div>
+        </section>
+
+        <section id="game-dev" class="section">
+            <h2>Game Development <span class="difficulty advanced">Advanced</span></h2>
+            
+            <h3>Basic Game Loop</h3>
+            <div class="code-block" data-title="Game Loop Example">
+                <pre><code>-- Basic game loop
+local RunService = game:GetService("RunService")
+
+-- Game state
+local gameState = {
+    players = {},
+    score = 0,
+    isRunning = true
+}
+
+-- Update function
+local function update(deltaTime)
+    -- Update game logic
+    for _, player in pairs(gameState.players) do
+        updatePlayer(player, deltaTime)
+    end
+    
+    -- Check collisions
+    checkCollisions()
+    
+    -- Update score
+    updateScore()
+end
+
+-- Render function
+local function render()
+    -- Clear screen
+    clearScreen()
+    
+    -- Draw game objects
+    for _, player in pairs(gameState.players) do
+        drawPlayer(player)
+    end
+    
+    -- Draw UI
+    drawUI()
+end
+
+-- Main game loop
+RunService.Heartbeat:Connect(function(deltaTime)
+    if gameState.isRunning then
+        update(deltaTime)
+        render()
+    end
+end)</code></pre>
+            </div>
+
+            <h3>Player Movement</h3>
+            <div class="code-block" data-title="Movement Example">
+                <pre><code>-- Advanced player movement
+local function setupPlayerMovement(player)
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not humanoid or not rootPart then return end
+    
+    -- Movement settings
+    local settings = {
+        walkSpeed = 16,
+        runSpeed = 24,
+        jumpPower = 50,
+        maxSlopeAngle = 45
+    }
+    
+    -- Apply settings
+    humanoid.WalkSpeed = settings.walkSpeed
+    humanoid.JumpPower = settings.jumpPower
+    humanoid.MaxSlopeAngle = settings.maxSlopeAngle
+    
+    -- Movement functions
+    local function move(direction)
+        if not direction then return end
+        humanoid:Move(direction)
+    end
+    
+    local function jump()
+        if humanoid.FloorMaterial ~= Enum.Material.Air then
+            humanoid.Jump = true
+        end
+    end
+    
+    -- Input handling
+    local UserInputService = game:GetService("UserInputService")
+    
+    UserInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.Space then
+            jump()
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            local moveDirection = Vector3.new(
+                input.KeyCode == Enum.KeyCode.D and 1 or input.KeyCode == Enum.KeyCode.A and -1 or 0,
+                0,
+                input.KeyCode == Enum.KeyCode.S and 1 or input.KeyCode == Enum.KeyCode.W and -1 or 0
+            )
+            move(moveDirection)
+        end
+    end)
+end</code></pre>
+            </div>
+        </section>
+
+        <section id="quiz" class="section">
+            <h2>Test Your Knowledge</h2>
+            
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>1. What is the correct way to declare a local variable in Lua?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(1, 'a')">var x = 5</button>
+                        <button onclick="checkAnswer(1, 'b')">local x = 5</button>
+                        <button onclick="checkAnswer(1, 'c')">let x = 5</button>
+                    </div>
+                    <div id="result1" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>2. How do you create a table in Lua?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(2, 'a')">table = []</button>
+                        <button onclick="checkAnswer(2, 'b')">table = {}</button>
+                        <button onclick="checkAnswer(2, 'c')">table = ()</button>
+                    </div>
+                    <div id="result2" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>3. What is the correct way to create a coroutine?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(3, 'a')">new Coroutine()</button>
+                        <button onclick="checkAnswer(3, 'b')">coroutine.create()</button>
+                        <button onclick="checkAnswer(3, 'c')">createCoroutine()</button>
+                    </div>
+                    <div id="result3" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>4. How do you handle errors in Lua?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(4, 'a')">try-catch</button>
+                        <button onclick="checkAnswer(4, 'b')">pcall</button>
+                        <button onclick="checkAnswer(4, 'c')">error handling</button>
+                    </div>
+                    <div id="result4" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>5. What is the correct way to implement a game loop?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(5, 'a')">while true do</button>
+                        <button onclick="checkAnswer(5, 'b')">RunService.Heartbeat</button>
+                        <button onclick="checkAnswer(5, 'c')">game.Loop</button>
+                    </div>
+                    <div id="result5" class="result"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function checkAnswer(questionNumber, answer) {
+            const results = {
+                1: { correct: 'b', explanation: 'In Lua, we use "local" to declare local variables.' },
+                2: { correct: 'b', explanation: 'Tables in Lua are created using curly braces {}.' },
+                3: { correct: 'b', explanation: 'Coroutines are created using coroutine.create() function.' },
+                4: { correct: 'b', explanation: 'Lua uses pcall for error handling.' },
+                5: { correct: 'b', explanation: 'RunService.Heartbeat is the proper way to implement a game loop in Roblox.' }
+            };
+
+            const resultDiv = document.getElementById(`result${questionNumber}`);
+            const selectedAnswer = answer;
+            const correctAnswer = results[questionNumber].correct;
+
+            resultDiv.style.display = 'block';
+            
+            if (selectedAnswer === correctAnswer) {
+                resultDiv.className = 'result correct';
+                resultDiv.textContent = 'Correct! ' + results[questionNumber].explanation;
+            } else {
+                resultDiv.className = 'result incorrect';
+                resultDiv.textContent = 'Incorrect. ' + results[questionNumber].explanation;
+            }
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.section');
+            
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
