@@ -1172,6 +1172,90 @@ end</code></pre>
                     <div id="result5" class="result"></div>
                 </div>
             </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>6. How do you create a metatable in Lua?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(6, 'a')">table.metatable()</button>
+                        <button onclick="checkAnswer(6, 'b')">setmetatable()</button>
+                        <button onclick="checkAnswer(6, 'c')">createMetatable()</button>
+                    </div>
+                    <div id="result6" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>7. What is the correct way to concatenate strings in Lua?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(7, 'a')">str1 + str2</button>
+                        <button onclick="checkAnswer(7, 'b')">str1 .. str2</button>
+                        <button onclick="checkAnswer(7, 'c')">str1 & str2</button>
+                    </div>
+                    <div id="result7" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>8. How do you create a function in Lua?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(8, 'a')">function myFunc() {}</button>
+                        <button onclick="checkAnswer(8, 'b')">function myFunc() end</button>
+                        <button onclick="checkAnswer(8, 'c')">def myFunc() end</button>
+                    </div>
+                    <div id="result8" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>9. What is the correct way to iterate over a table?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(9, 'a')">for item in table</button>
+                        <button onclick="checkAnswer(9, 'b')">for k,v in pairs(table)</button>
+                        <button onclick="checkAnswer(9, 'c')">foreach(table)</button>
+                    </div>
+                    <div id="result9" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>10. How do you create a new instance in Roblox?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(10, 'a')">new Instance()</button>
+                        <button onclick="checkAnswer(10, 'b')">Instance.new()</button>
+                        <button onclick="checkAnswer(10, 'c')">createInstance()</button>
+                    </div>
+                    <div id="result10" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>11. What is the correct way to connect to an event?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(11, 'a')">event.on()</button>
+                        <button onclick="checkAnswer(11, 'b')">event:Connect()</button>
+                        <button onclick="checkAnswer(11, 'c')">addEventListener()</button>
+                    </div>
+                    <div id="result11" class="result"></div>
+                </div>
+            </div>
+
+            <div class="quiz">
+                <div class="quiz-question">
+                    <p>12. How do you create a UI element in Roblox?</p>
+                    <div class="quiz-options">
+                        <button onclick="checkAnswer(12, 'a')">new UIElement()</button>
+                        <button onclick="checkAnswer(12, 'b')">Instance.new("Frame")</button>
+                        <button onclick="checkAnswer(12, 'c')">createUI()</button>
+                    </div>
+                    <div id="result12" class="result"></div>
+                </div>
+            </div>
         </section>
     </div>
 
@@ -1182,7 +1266,14 @@ end</code></pre>
                 2: { correct: 'b', explanation: 'Tables in Lua are created using curly braces {}.' },
                 3: { correct: 'b', explanation: 'Coroutines are created using coroutine.create() function.' },
                 4: { correct: 'b', explanation: 'Lua uses pcall for error handling.' },
-                5: { correct: 'b', explanation: 'RunService.Heartbeat is the proper way to implement a game loop in Roblox.' }
+                5: { correct: 'b', explanation: 'RunService.Heartbeat is the proper way to implement a game loop in Roblox.' },
+                6: { correct: 'b', explanation: 'Metatables are set using setmetatable() function.' },
+                7: { correct: 'b', explanation: 'String concatenation in Lua uses the .. operator.' },
+                8: { correct: 'b', explanation: 'Functions in Lua are created using the function keyword and end.' },
+                9: { correct: 'b', explanation: 'Tables are iterated using pairs() or ipairs() in a for loop.' },
+                10: { correct: 'b', explanation: 'New instances are created using Instance.new() in Roblox.' },
+                11: { correct: 'b', explanation: 'Events are connected using the :Connect() method.' },
+                12: { correct: 'b', explanation: 'UI elements are created using Instance.new() with the appropriate class name.' }
             };
 
             const resultDiv = document.getElementById(`result${questionNumber}`);
