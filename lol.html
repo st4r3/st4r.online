@@ -1,0 +1,379 @@
+local CustomUI = {}
+CustomUI.__index = CustomUI
+
+-- Services
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+-- Constants
+local COLORS = {
+    Background = Color3.fromRGB(30, 30, 30),
+    Secondary = Color3.fromRGB(40, 40, 40),
+    Accent = Color3.fromRGB(0, 120, 215),
+    Text = Color3.fromRGB(255, 255, 255),
+    TextSecondary = Color3.fromRGB(200, 200, 200)
+}
+
+-- Utility Functions
+local function createInstance(className, properties)
+    local instance = Instance.new(className)
+    for property, value in pairs(properties) do
+        instance[property] = value
+    end
+    return instance
+end
+
+-- Main Window
+function CustomUI.new(title)
+    local self = setmetatable({}, CustomUI)
+    
+    -- Create main window
+    self.window = createInstance("ScreenGui", {
+        Name = "CustomUI",
+        ResetOnSpawn = false,
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    })
+    
+    self.mainFrame = createInstance("Frame", {
+        Name = "MainFrame",
+        Size = UDim2.new(0, 400, 0, 500),
+        Position = UDim2.new(0.5, -200, 0.5, -250),
+        BackgroundColor3 = COLORS.Background,
+        BorderSizePixel = 0,
+        ZIndex = 1
+    })
+    
+    -- Add corner radius to main frame
+    local corner = createInstance("UICorner", {
+        CornerRadius = UDim.new(0, 6)
+    })
+    corner.Parent = self.mainFrame
+    
+    -- Title bar
+    self.titleBar = createInstance("Frame", {
+        Name = "TitleBar",
+        Size = UDim2.new(1, 0, 0, 30),
+        BackgroundColor3 = COLORS.Secondary,
+        BorderSizePixel = 0,
+        ZIndex = 2
+    })
+    
+    -- Add corner radius to title bar
+    local titleCorner = createInstance("UICorner", {
+        CornerRadius = UDim.new(0, 6)
+    })
+    titleCorner.Parent = self.titleBar
+    
+    self.titleText = createInstance("TextLabel", {
+        Name = "TitleText",
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundTransparency = 1,
+        Text = title,
+        TextColor3 = COLORS.Text,
+        TextSize = 14,
+        Font = Enum.Font.GothamBold,
+        ZIndex = 3
+    })
+    
+    -- Tab container
+    self.tabContainer = createInstance("Frame", {
+        Name = "TabContainer",
+        Size = UDim2.new(1, 0, 0, 30),
+        Position = UDim2.new(0, 0, 0, 30),
+        BackgroundColor3 = COLORS.Secondary,
+        BorderSizePixel = 0,
+        ZIndex = 2
+    })
+    
+    -- Content container
+    self.contentContainer = createInstance("ScrollingFrame", {
+        Name = "ContentContainer",
+        Size = UDim2.new(1, 0, 1, -60),
+        Position = UDim2.new(0, 0, 0, 60),
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        ScrollBarThickness = 4,
+        CanvasSize = UDim2.new(0, 0, 0, 0),
+        ScrollingDirection = Enum.ScrollingDirection.Y,
+        ZIndex = 1
+    })
+    
+    -- Add corner radius to content container
+    local contentCorner = createInstance("UICorner", {
+        CornerRadius = UDim.new(0, 6)
+    })
+    contentCorner.Parent = self.contentContainer
+    
+    -- Assemble UI
+    self.titleBar.Parent = self.mainFrame
+    self.titleText.Parent = self.titleBar
+    self.tabContainer.Parent = self.mainFrame
+    self.contentContainer.Parent = self.mainFrame
+    
+    -- Make window draggable
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+    
+    local function update(input)
+        local delta = input.Position - dragStart
+        self.mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    
+    self.titleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = self.mainFrame.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    self.titleBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+    
+    -- Initialize tabs
+    self.tabs = {}
+    self.currentTab = nil
+    
+    return self
+end
+
+-- Tab Functions
+function CustomUI:CreateTab(name)
+    local tab = {
+        name = name,
+        button = createInstance("TextButton", {
+            Name = name .. "Tab",
+            Size = UDim2.new(0, 100, 1, 0),
+            BackgroundColor3 = COLORS.Secondary,
+            BorderSizePixel = 0,
+            Text = name,
+            TextColor3 = COLORS.TextSecondary,
+            TextSize = 14,
+            Font = Enum.Font.GothamSemibold
+        }),
+        content = createInstance("Frame", {
+            Name = name .. "Content",
+            Size = UDim2.new(1, 0, 1, 0),
+            BackgroundTransparency = 1,
+            Visible = false
+        })
+    }
+    
+    tab.button.Parent = self.tabContainer
+    tab.content.Parent = self.contentContainer
+    
+    tab.button.MouseButton1Click:Connect(function()
+        self:SwitchTab(name)
+    end)
+    
+    self.tabs[name] = tab
+    
+    if not self.currentTab then
+        self:SwitchTab(name)
+    end
+    
+    return tab
+end
+
+function CustomUI:SwitchTab(name)
+    if self.currentTab then
+        self.tabs[self.currentTab].button.BackgroundColor3 = COLORS.Secondary
+        self.tabs[self.currentTab].button.TextColor3 = COLORS.TextSecondary
+        self.tabs[self.currentTab].content.Visible = false
+    end
+    
+    self.currentTab = name
+    self.tabs[name].button.BackgroundColor3 = COLORS.Accent
+    self.tabs[name].button.TextColor3 = COLORS.Text
+    self.tabs[name].content.Visible = true
+end
+
+-- Control Functions
+function CustomUI:CreateCheckbox(name, callback)
+    local checkbox = {
+        frame = createInstance("Frame", {
+            Name = name .. "Checkbox",
+            Size = UDim2.new(1, -20, 0, 30),
+            BackgroundTransparency = 1
+        }),
+        button = createInstance("TextButton", {
+            Name = "Button",
+            Size = UDim2.new(0, 20, 0, 20),
+            Position = UDim2.new(0, 0, 0.5, -10),
+            BackgroundColor3 = COLORS.Secondary,
+            BorderSizePixel = 0,
+            Text = "",
+            TextSize = 0
+        }),
+        label = createInstance("TextLabel", {
+            Name = "Label",
+            Size = UDim2.new(1, -30, 1, 0),
+            Position = UDim2.new(0, 25, 0, 0),
+            BackgroundTransparency = 1,
+            Text = name,
+            TextColor3 = COLORS.Text,
+            TextSize = 14,
+            Font = Enum.Font.GothamSemibold,
+            TextXAlignment = Enum.TextXAlignment.Left
+        })
+    }
+    
+    checkbox.frame.Parent = self.tabs[self.currentTab].content
+    checkbox.button.Parent = checkbox.frame
+    checkbox.label.Parent = checkbox.frame
+    
+    local checked = false
+    
+    checkbox.button.MouseButton1Click:Connect(function()
+        checked = not checked
+        checkbox.button.BackgroundColor3 = checked and COLORS.Accent or COLORS.Secondary
+        if callback then
+            callback(checked)
+        end
+    end)
+    
+    return checkbox
+end
+
+function CustomUI:CreateSlider(name, min, max, default, callback)
+    local slider = {
+        frame = createInstance("Frame", {
+            Name = name .. "Slider",
+            Size = UDim2.new(1, -20, 0, 50),
+            BackgroundTransparency = 1
+        }),
+        label = createInstance("TextLabel", {
+            Name = "Label",
+            Size = UDim2.new(1, 0, 0, 20),
+            BackgroundTransparency = 1,
+            Text = name .. ": " .. default,
+            TextColor3 = COLORS.Text,
+            TextSize = 14,
+            Font = Enum.Font.GothamSemibold,
+            TextXAlignment = Enum.TextXAlignment.Left
+        }),
+        track = createInstance("Frame", {
+            Name = "Track",
+            Size = UDim2.new(1, 0, 0, 4),
+            Position = UDim2.new(0, 0, 0, 30),
+            BackgroundColor3 = COLORS.Secondary,
+            BorderSizePixel = 0
+        }),
+        fill = createInstance("Frame", {
+            Name = "Fill",
+            Size = UDim2.new(0, 0, 1, 0),
+            BackgroundColor3 = COLORS.Accent,
+            BorderSizePixel = 0
+        }),
+        handle = createInstance("Frame", {
+            Name = "Handle",
+            Size = UDim2.new(0, 12, 0, 12),
+            Position = UDim2.new(0, 0, 0.5, -6),
+            BackgroundColor3 = COLORS.Text,
+            BorderSizePixel = 0
+        })
+    }
+    
+    slider.frame.Parent = self.tabs[self.currentTab].content
+    slider.label.Parent = slider.frame
+    slider.track.Parent = slider.frame
+    slider.fill.Parent = slider.track
+    slider.handle.Parent = slider.track
+    
+    local value = default
+    local dragging = false
+    
+    local function updateValue(x)
+        local relativeX = math.clamp(x - slider.track.AbsolutePosition.X, 0, slider.track.AbsoluteSize.X)
+        local percentage = relativeX / slider.track.AbsoluteSize.X
+        value = math.floor(min + (max - min) * percentage)
+        slider.label.Text = name .. ": " .. value
+        slider.fill.Size = UDim2.new(percentage, 0, 1, 0)
+        slider.handle.Position = UDim2.new(percentage, -6, 0.5, -6)
+        if callback then
+            callback(value)
+        end
+    end
+    
+    slider.handle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+        end
+    end)
+    
+    slider.handle.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+            updateValue(input.Position.X)
+        end
+    end)
+    
+    -- Set initial value
+    updateValue(slider.track.AbsolutePosition.X + (default - min) / (max - min) * slider.track.AbsoluteSize.X)
+    
+    return slider
+end
+
+function CustomUI:CreateButton(name, callback)
+    local button = createInstance("TextButton", {
+        Name = name .. "Button",
+        Size = UDim2.new(1, -20, 0, 30),
+        BackgroundColor3 = COLORS.Accent,
+        BorderSizePixel = 0,
+        Text = name,
+        TextColor3 = COLORS.Text,
+        TextSize = 14,
+        Font = Enum.Font.GothamSemibold
+    })
+    
+    button.Parent = self.tabs[self.currentTab].content
+    
+    button.MouseButton1Click:Connect(function()
+        if callback then
+            callback()
+        end
+    end)
+    
+    return button
+end
+
+function CustomUI:CreateLabel(text)
+    local label = createInstance("TextLabel", {
+        Name = "Label",
+        Size = UDim2.new(1, -20, 0, 20),
+        BackgroundTransparency = 1,
+        Text = text,
+        TextColor3 = COLORS.Text,
+        TextSize = 14,
+        Font = Enum.Font.GothamSemibold
+    })
+    
+    label.Parent = self.tabs[self.currentTab].content
+    
+    return label
+end
+
+return CustomUI 
