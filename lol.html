@@ -15,17 +15,17 @@ function GooUILib:CreateMain(title)
 	screenGui.Parent = Player:WaitForChild("PlayerGui")
 
 	local main = Instance.new("Frame")
-	main.Size = UDim2.new(0, 360, 0, 480)
-	main.Position = UDim2.new(0.5, -180, 0.5, -240)
-	main.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
-	main.BorderSizePixel = 0
+	main.Size = UDim2.new(0, 420, 0, 540)
+	main.Position = UDim2.new(0.5, 0, 0.5, 0)
 	main.AnchorPoint = Vector2.new(0.5, 0.5)
-	main.Parent = screenGui
+	main.BackgroundColor3 = Color3.fromRGB(24, 26, 32)
+	main.BorderSizePixel = 0
 	main.ZIndex = 10
+	main.Parent = screenGui
 
 	-- Rounded corners
 	local uicorner = Instance.new("UICorner")
-	uicorner.CornerRadius = UDim.new(0, 12)
+	uicorner.CornerRadius = UDim.new(0, 14)
 	uicorner.Parent = main
 
 	-- Drop shadow
@@ -33,16 +33,16 @@ function GooUILib:CreateMain(title)
 	shadow.Name = "Shadow"
 	shadow.Image = "rbxassetid://1316045217"
 	shadow.BackgroundTransparency = 1
-	shadow.ImageTransparency = 0.5
-	shadow.Size = UDim2.new(1, 32, 1, 32)
-	shadow.Position = UDim2.new(0, -16, 0, -16)
+	shadow.ImageTransparency = 0.6
+	shadow.Size = UDim2.new(1, 40, 1, 40)
+	shadow.Position = UDim2.new(0, -20, 0, -20)
 	shadow.ZIndex = 9
 	shadow.Parent = main
 
 	-- Close button
 	local closeBtn = Instance.new("TextButton")
 	closeBtn.Size = UDim2.new(0, 32, 0, 32)
-	closeBtn.Position = UDim2.new(1, -40, 0, 8)
+	closeBtn.Position = UDim2.new(1, -40, 0, 12)
 	closeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 	closeBtn.Text = "✕"
 	closeBtn.Font = Enum.Font.GothamBold
@@ -66,18 +66,13 @@ function GooUILib:CreateMain(title)
 		end
 	end)
 
-	local uiList = Instance.new("UIListLayout")
-	uiList.SortOrder = Enum.SortOrder.LayoutOrder
-	uiList.Padding = UDim.new(0, 10)
-	uiList.Parent = main
-
 	local titleLabel = Instance.new("TextLabel")
-	titleLabel.Size = UDim2.new(1, 0, 0, 44)
+	titleLabel.Size = UDim2.new(1, 0, 0, 54)
 	titleLabel.BackgroundTransparency = 1
 	titleLabel.Text = title or "Goo UI"
 	titleLabel.Font = Enum.Font.GothamBlack
 	titleLabel.TextColor3 = Color3.fromRGB(0, 170, 255)
-	titleLabel.TextSize = 24
+	titleLabel.TextSize = 28
 	titleLabel.ZIndex = 11
 	titleLabel.Parent = main
 
@@ -89,10 +84,14 @@ end
 -- Create Slider
 function GooUILib:CreateSlider(parent, name, min, max, default, callback)
 	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(1, -10, 0, 50)
+	frame.Size = UDim2.new(1, -32, 0, 54)
+	frame.Position = UDim2.new(0, 16, 0, 0)
 	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 	frame.BorderSizePixel = 0
 	frame.Parent = parent
+	local uicorner = Instance.new("UICorner")
+	uicorner.CornerRadius = UDim.new(0, 8)
+	uicorner.Parent = frame
 
 	local label = Instance.new("TextLabel")
 	label.Size = UDim2.new(1, -20, 0, 20)
@@ -101,22 +100,28 @@ function GooUILib:CreateSlider(parent, name, min, max, default, callback)
 	label.Text = name .. ": " .. tostring(default)
 	label.Font = Enum.Font.Gotham
 	label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	label.TextSize = 14
+	label.TextSize = 15
 	label.TextXAlignment = Enum.TextXAlignment.Left
 	label.Parent = frame
 
 	local bar = Instance.new("Frame")
-	bar.Size = UDim2.new(1, -20, 0, 8)
+	bar.Size = UDim2.new(1, -20, 0, 10)
 	bar.Position = UDim2.new(0, 10, 0, 30)
 	bar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 	bar.BorderSizePixel = 0
 	bar.Parent = frame
+	local barCorner = Instance.new("UICorner")
+	barCorner.CornerRadius = UDim.new(1, 0)
+	barCorner.Parent = bar
 
 	local fill = Instance.new("Frame")
 	fill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
 	fill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 	fill.BorderSizePixel = 0
 	fill.Parent = bar
+	local fillCorner = Instance.new("UICorner")
+	fillCorner.CornerRadius = UDim.new(1, 0)
+	fillCorner.Parent = fill
 
 	local dragging = false
 
@@ -147,15 +152,21 @@ function GooUILib:CreateSlider(parent, name, min, max, default, callback)
 			update(input)
 		end
 	end)
+
+	return frame
 end
 
 -- Create Dropdown
 function GooUILib:CreateDropdown(parent, name, options, callback)
 	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(1, -10, 0, 40)
+	frame.Size = UDim2.new(1, -32, 0, 44)
+	frame.Position = UDim2.new(0, 16, 0, 0)
 	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 	frame.BorderSizePixel = 0
 	frame.Parent = parent
+	local uicorner = Instance.new("UICorner")
+	uicorner.CornerRadius = UDim.new(0, 8)
+	uicorner.Parent = frame
 
 	local label = Instance.new("TextButton")
 	label.Size = UDim2.new(1, -20, 1, 0)
@@ -164,18 +175,21 @@ function GooUILib:CreateDropdown(parent, name, options, callback)
 	label.Text = name .. ": " .. options[1]
 	label.Font = Enum.Font.Gotham
 	label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	label.TextSize = 14
+	label.TextSize = 15
 	label.TextXAlignment = Enum.TextXAlignment.Left
 	label.Parent = frame
 
 	local open = false
 	local dropdown = Instance.new("Frame")
-	dropdown.Size = UDim2.new(1, -10, 0, #options * 25)
+	dropdown.Size = UDim2.new(1, -10, 0, #options * 28)
 	dropdown.Position = UDim2.new(0, 10, 1, 0)
 	dropdown.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 	dropdown.BorderSizePixel = 0
 	dropdown.Visible = false
 	dropdown.Parent = frame
+	local dropCorner = Instance.new("UICorner")
+	dropCorner.CornerRadius = UDim.new(0, 8)
+	dropCorner.Parent = dropdown
 
 	local list = Instance.new("UIListLayout")
 	list.SortOrder = Enum.SortOrder.LayoutOrder
@@ -184,13 +198,16 @@ function GooUILib:CreateDropdown(parent, name, options, callback)
 
 	for _, opt in ipairs(options) do
 		local btn = Instance.new("TextButton")
-		btn.Size = UDim2.new(1, 0, 0, 24)
+		btn.Size = UDim2.new(1, 0, 0, 26)
 		btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		btn.Text = opt
 		btn.Font = Enum.Font.Gotham
 		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-		btn.TextSize = 14
+		btn.TextSize = 15
 		btn.Parent = dropdown
+		local btnCorner = Instance.new("UICorner")
+		btnCorner.CornerRadius = UDim.new(0, 6)
+		btnCorner.Parent = btn
 
 		btn.MouseButton1Click:Connect(function()
 			label.Text = name .. ": " .. opt
@@ -204,12 +221,14 @@ function GooUILib:CreateDropdown(parent, name, options, callback)
 		open = not open
 		dropdown.Visible = open
 	end)
+
+	return frame
 end
 
 -- Create Tabs
 function GooUILib:CreateTabs(parent, tabNames)
 	local tabFrame = Instance.new("Frame")
-	tabFrame.Size = UDim2.new(1, 0, 0, 36)
+	tabFrame.Size = UDim2.new(1, 0, 0, 44)
 	tabFrame.BackgroundTransparency = 1
 	tabFrame.Parent = parent
 
@@ -218,42 +237,64 @@ function GooUILib:CreateTabs(parent, tabNames)
 	local selectedTab = nil
 
 	local buttonHolder = Instance.new("Frame")
-	buttonHolder.Size = UDim2.new(1, 0, 0, 36)
+	buttonHolder.Size = UDim2.new(1, -32, 1, 0)
+	buttonHolder.Position = UDim2.new(0, 16, 0, 0)
 	buttonHolder.BackgroundTransparency = 1
 	buttonHolder.Parent = tabFrame
 
 	local buttonList = Instance.new("UIListLayout")
 	buttonList.FillDirection = Enum.FillDirection.Horizontal
 	buttonList.SortOrder = Enum.SortOrder.LayoutOrder
-	buttonList.Padding = UDim.new(0, 6)
+	buttonList.Padding = UDim.new(0, 10)
+	buttonList.VerticalAlignment = Enum.VerticalAlignment.Center
 	buttonList.Parent = buttonHolder
 
 	for i, tabName in ipairs(tabNames) do
 		local btn = Instance.new("TextButton")
-		btn.Size = UDim2.new(0, 80, 1, 0)
-		btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		btn.Size = UDim2.new(0, 110, 1, -8)
+		btn.BackgroundColor3 = Color3.fromRGB(32, 36, 44)
 		btn.Text = tabName
 		btn.Font = Enum.Font.GothamBold
-		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-		btn.TextSize = 15
-		btn.AutoButtonColor = true
+		btn.TextColor3 = Color3.fromRGB(180, 200, 255)
+		btn.TextSize = 17
+		btn.AutoButtonColor = false
 		btn.Parent = buttonHolder
+		local uicorner = Instance.new("UICorner")
+		uicorner.CornerRadius = UDim.new(0, 8)
+		uicorner.Parent = btn
+
+		btn.MouseEnter:Connect(function()
+			game:GetService("TweenService"):Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 60, 80)}):Play()
+		end)
+		btn.MouseLeave:Connect(function()
+			if selectedTab ~= tabName then
+				game:GetService("TweenService"):Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(32, 36, 44)}):Play()
+			end
+		end)
 
 		local page = Instance.new("Frame")
-		page.Size = UDim2.new(1, 0, 1, -36)
-		page.Position = UDim2.new(0, 0, 0, 36)
-		page.BackgroundTransparency = 1
+		page.Size = UDim2.new(1, -40, 1, -100)
+		page.Position = UDim2.new(0, 20, 0, 74)
+		page.BackgroundColor3 = Color3.fromRGB(30, 32, 40)
+		page.BorderSizePixel = 0
 		page.Visible = false
 		page.Parent = parent
+		local pageCorner = Instance.new("UICorner")
+		pageCorner.CornerRadius = UDim.new(0, 10)
+		pageCorner.Parent = page
 
 		tabButtons[tabName] = btn
 		tabPages[tabName] = page
 
 		btn.MouseButton1Click:Connect(function()
-			for _, p in pairs(tabPages) do p.Visible = false end
-			for _, b in pairs(tabButtons) do b.BackgroundColor3 = Color3.fromRGB(40, 40, 40) end
+			for t, p in pairs(tabPages) do
+				p.Visible = false
+				if tabButtons[t] then
+					game:GetService("TweenService"):Create(tabButtons[t], TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(32, 36, 44)}):Play()
+				end
+			end
 			page.Visible = true
-			btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+			game:GetService("TweenService"):Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(0, 170, 255)}):Play()
 			selectedTab = tabName
 		end)
 	end
@@ -267,8 +308,12 @@ function GooUILib:CreateTabs(parent, tabNames)
 
 	return tabPages, function(tabName)
 		if tabPages[tabName] then
-			for _, p in pairs(tabPages) do p.Visible = false end
-			for _, b in pairs(tabButtons) do b.BackgroundColor3 = Color3.fromRGB(40, 40, 40) end
+			for t, p in pairs(tabPages) do
+				p.Visible = false
+				if tabButtons[t] then
+					tabButtons[t].BackgroundColor3 = Color3.fromRGB(32, 36, 44)
+				end
+			end
 			tabPages[tabName].Visible = true
 			tabButtons[tabName].BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 			selectedTab = tabName
@@ -279,16 +324,15 @@ end
 -- Create Button
 function GooUILib:CreateButton(parent, name, callback)
 	local btn = Instance.new("TextButton")
-	btn.Size = UDim2.new(1, -20, 0, 36)
-	btn.Position = UDim2.new(0, 10, 0, 0)
+	btn.Size = UDim2.new(1, -32, 0, 40)
+	btn.Position = UDim2.new(0, 16, 0, 0)
 	btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 	btn.Text = name
 	btn.Font = Enum.Font.GothamBold
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	btn.TextSize = 16
+	btn.TextSize = 17
 	btn.AutoButtonColor = false
 	btn.Parent = parent
-
 	local uicorner = Instance.new("UICorner")
 	uicorner.CornerRadius = UDim.new(0, 8)
 	uicorner.Parent = btn
@@ -310,36 +354,35 @@ end
 -- Create Toggle
 function GooUILib:CreateToggle(parent, name, default, callback)
 	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(1, -10, 0, 36)
+	frame.Size = UDim2.new(1, -32, 0, 40)
+	frame.Position = UDim2.new(0, 16, 0, 0)
 	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 	frame.BorderSizePixel = 0
 	frame.Parent = parent
-
 	local uicorner = Instance.new("UICorner")
 	uicorner.CornerRadius = UDim.new(0, 8)
 	uicorner.Parent = frame
 
 	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, -50, 1, 0)
-	label.Position = UDim2.new(0, 10, 0, 0)
+	label.Size = UDim2.new(1, -60, 1, 0)
+	label.Position = UDim2.new(0, 12, 0, 0)
 	label.BackgroundTransparency = 1
 	label.Text = name
 	label.Font = Enum.Font.Gotham
 	label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	label.TextSize = 15
+	label.TextSize = 16
 	label.TextXAlignment = Enum.TextXAlignment.Left
 	label.Parent = frame
 
 	local toggle = Instance.new("TextButton")
-	toggle.Size = UDim2.new(0, 36, 0, 20)
-	toggle.Position = UDim2.new(1, -46, 0.5, -10)
+	toggle.Size = UDim2.new(0, 44, 0, 24)
+	toggle.Position = UDim2.new(1, -52, 0.5, -12)
 	toggle.BackgroundColor3 = default and Color3.fromRGB(0, 170, 255) or Color3.fromRGB(70, 70, 70)
 	toggle.Text = default and "ON" or "OFF"
 	toggle.Font = Enum.Font.GothamBold
 	toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-	toggle.TextSize = 13
+	toggle.TextSize = 14
 	toggle.Parent = frame
-
 	local toggleCorner = Instance.new("UICorner")
 	toggleCorner.CornerRadius = UDim.new(1, 0)
 	toggleCorner.Parent = toggle
@@ -362,11 +405,11 @@ end
 -- Create TextBox
 function GooUILib:CreateTextBox(parent, name, default, callback)
 	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(1, -10, 0, 38)
+	frame.Size = UDim2.new(1, -32, 0, 44)
+	frame.Position = UDim2.new(0, 16, 0, 0)
 	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 	frame.BorderSizePixel = 0
 	frame.Parent = parent
-
 	local uicorner = Instance.new("UICorner")
 	uicorner.CornerRadius = UDim.new(0, 8)
 	uicorner.Parent = frame
@@ -392,7 +435,6 @@ function GooUILib:CreateTextBox(parent, name, default, callback)
 	box.TextSize = 15
 	box.ClearTextOnFocus = false
 	box.Parent = frame
-
 	local boxCorner = Instance.new("UICorner")
 	boxCorner.CornerRadius = UDim.new(0, 6)
 	boxCorner.Parent = box
