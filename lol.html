@@ -1,1 +1,160 @@
+local GooUILib = {}
 
+-- Services
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+
+-- Create the main UI
+function GooUILib:CreateMain(title)
+	local screenGui = Instance.new("ScreenGui")
+	screenGui.Name = "GooUI"
+	screenGui.ResetOnSpawn = false
+	screenGui.Parent = Player:WaitForChild("PlayerGui")
+
+	local main = Instance.new("Frame")
+	main.Size = UDim2.new(0, 300, 0, 400)
+	main.Position = UDim2.new(0.5, -150, 0.5, -200)
+	main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	main.BorderSizePixel = 0
+	main.AnchorPoint = Vector2.new(0.5, 0.5)
+	main.Parent = screenGui
+
+	local uiList = Instance.new("UIListLayout")
+	uiList.SortOrder = Enum.SortOrder.LayoutOrder
+	uiList.Padding = UDim.new(0, 8)
+	uiList.Parent = main
+
+	local titleLabel = Instance.new("TextLabel")
+	titleLabel.Size = UDim2.new(1, 0, 0, 40)
+	titleLabel.BackgroundTransparency = 1
+	titleLabel.Text = title or "Goo UI"
+	titleLabel.Font = Enum.Font.GothamBold
+	titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	titleLabel.TextSize = 20
+	titleLabel.Parent = main
+
+	return main
+end
+
+-- Create Slider
+function GooUILib:CreateSlider(parent, name, min, max, default, callback)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -10, 0, 50)
+	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	frame.BorderSizePixel = 0
+	frame.Parent = parent
+
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -20, 0, 20)
+	label.Position = UDim2.new(0, 10, 0, 5)
+	label.BackgroundTransparency = 1
+	label.Text = name .. ": " .. tostring(default)
+	label.Font = Enum.Font.Gotham
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextSize = 14
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = frame
+
+	local bar = Instance.new("Frame")
+	bar.Size = UDim2.new(1, -20, 0, 8)
+	bar.Position = UDim2.new(0, 10, 0, 30)
+	bar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+	bar.BorderSizePixel = 0
+	bar.Parent = frame
+
+	local fill = Instance.new("Frame")
+	fill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+	fill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+	fill.BorderSizePixel = 0
+	fill.Parent = bar
+
+	local dragging = false
+
+	local function update(input)
+		local rel = (input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
+		rel = math.clamp(rel, 0, 1)
+		local val = math.floor((min + (max - min) * rel) + 0.5)
+		fill.Size = UDim2.new(rel, 0, 1, 0)
+		label.Text = name .. ": " .. tostring(val)
+		callback(val)
+	end
+
+	bar.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			update(input)
+		end
+	end)
+
+	bar.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = false
+		end
+	end)
+
+	game:GetService("UserInputService").InputChanged:Connect(function(input)
+		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+			update(input)
+		end
+	end)
+end
+
+-- Create Dropdown
+function GooUILib:CreateDropdown(parent, name, options, callback)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -10, 0, 40)
+	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	frame.BorderSizePixel = 0
+	frame.Parent = parent
+
+	local label = Instance.new("TextButton")
+	label.Size = UDim2.new(1, -20, 1, 0)
+	label.Position = UDim2.new(0, 10, 0, 0)
+	label.BackgroundTransparency = 1
+	label.Text = name .. ": " .. options[1]
+	label.Font = Enum.Font.Gotham
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextSize = 14
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = frame
+
+	local open = false
+	local dropdown = Instance.new("Frame")
+	dropdown.Size = UDim2.new(1, -10, 0, #options * 25)
+	dropdown.Position = UDim2.new(0, 10, 1, 0)
+	dropdown.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	dropdown.BorderSizePixel = 0
+	dropdown.Visible = false
+	dropdown.Parent = frame
+
+	local list = Instance.new("UIListLayout")
+	list.SortOrder = Enum.SortOrder.LayoutOrder
+	list.Padding = UDim.new(0, 2)
+	list.Parent = dropdown
+
+	for _, opt in ipairs(options) do
+		local btn = Instance.new("TextButton")
+		btn.Size = UDim2.new(1, 0, 0, 24)
+		btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		btn.Text = opt
+		btn.Font = Enum.Font.Gotham
+		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		btn.TextSize = 14
+		btn.Parent = dropdown
+
+		btn.MouseButton1Click:Connect(function()
+			label.Text = name .. ": " .. opt
+			dropdown.Visible = false
+			open = false
+			callback(opt)
+		end)
+	end
+
+	label.MouseButton1Click:Connect(function()
+		open = not open
+		dropdown.Visible = open
+	end)
+end
+
+return GooUILib
