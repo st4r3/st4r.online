@@ -1,178 +1,485 @@
--- ModuleScript: GooUILib (Extended)
+-- ModuleScript: GooUILib
 
 local GooUILib = {}
+
+-- Services
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 
+-- Create the main UI
 function GooUILib:CreateMain(title)
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "GooUI"
-    screenGui.ResetOnSpawn = false
-    screenGui.Parent = Player:WaitForChild("PlayerGui")
+	local screenGui = Instance.new("ScreenGui")
+	screenGui.Name = "GooUI"
+	screenGui.ResetOnSpawn = false
+	screenGui.Parent = Player:WaitForChild("PlayerGui")
 
-    local main = Instance.new("Frame")
-    main.Name = "Main"
-    main.Size = UDim2.new(0, 350, 0, 450)
-    main.Position = UDim2.new(0.5, -175, 0.5, -225)
-    main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    main.BorderSizePixel = 0
-    main.AnchorPoint = Vector2.new(0.5, 0.5)
-    main.Parent = screenGui
+	local main = Instance.new("Frame")
+	main.Size = UDim2.new(0, 360, 0, 480)
+	main.Position = UDim2.new(0.5, -180, 0.5, -240)
+	main.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
+	main.BorderSizePixel = 0
+	main.AnchorPoint = Vector2.new(0.5, 0.5)
+	main.Parent = screenGui
+	main.ZIndex = 10
 
-    -- Drag logic
-    local dragging, dragStart, startPos
-    main.InputBegan:Connect(function(inp)
-        if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = inp.Position
-            startPos = main.Position
-            inp.Changed:Connect(function()
-                if inp.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-    main.InputChanged:Connect(function(inp)
-        if dragging and inp.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = inp.Position - dragStart
-            main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-                                       startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end)
+	-- Rounded corners
+	local uicorner = Instance.new("UICorner")
+	uicorner.CornerRadius = UDim.new(0, 12)
+	uicorner.Parent = main
 
-    local uiList = Instance.new("UIListLayout")
-    uiList.Padding = UDim.new(0, 10)
-    uiList.Parent = main
+	-- Drop shadow
+	local shadow = Instance.new("ImageLabel")
+	shadow.Name = "Shadow"
+	shadow.Image = "rbxassetid://1316045217"
+	shadow.BackgroundTransparency = 1
+	shadow.ImageTransparency = 0.5
+	shadow.Size = UDim2.new(1, 32, 1, 32)
+	shadow.Position = UDim2.new(0, -16, 0, -16)
+	shadow.ZIndex = 9
+	shadow.Parent = main
 
-    -- Title
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(1, 0, 0, 40)
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Text = title or "Goo UI"
-    titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextColor3 = Color3.new(1, 1, 1)
-    titleLabel.TextSize = 22
-    titleLabel.Parent = main
+	-- Close button
+	local closeBtn = Instance.new("TextButton")
+	closeBtn.Size = UDim2.new(0, 32, 0, 32)
+	closeBtn.Position = UDim2.new(1, -40, 0, 8)
+	closeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	closeBtn.Text = "✕"
+	closeBtn.Font = Enum.Font.GothamBold
+	closeBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+	closeBtn.TextSize = 20
+	closeBtn.ZIndex = 11
+	closeBtn.Parent = main
+	local closeCorner = Instance.new("UICorner")
+	closeCorner.CornerRadius = UDim.new(1, 0)
+	closeCorner.Parent = closeBtn
 
-    -- Tab folder
-    local tabsFolder = Instance.new("Frame")
-    tabsFolder.Name = "Tabs"
-    tabsFolder.Size = UDim2.new(1, 0, 1, -50)
-    tabsFolder.BackgroundTransparency = 1
-    tabsFolder.Parent = main
+	closeBtn.MouseButton1Click:Connect(function()
+		screenGui.Enabled = false
+	end)
 
-    -- Tab buttons bar
-    local tabBar = Instance.new("Frame")
-    tabBar.Size = UDim2.new(1, 0, 0, 30)
-    tabBar.BackgroundTransparency = 1
-    tabBar.Parent = tabsFolder
+	-- Hotkey to toggle UI (Insert key)
+	local UIS = game:GetService("UserInputService")
+	UIS.InputBegan:Connect(function(input, gpe)
+		if not gpe and input.KeyCode == Enum.KeyCode.Insert then
+			screenGui.Enabled = not screenGui.Enabled
+		end
+	end)
 
-    local tabUI = Instance.new("UIListLayout")
-    tabUI.FillDirection = Enum.FillDirection.Horizontal
-    tabUI.Padding = UDim.new(0, 4)
-    tabUI.Parent = tabBar
+	local uiList = Instance.new("UIListLayout")
+	uiList.SortOrder = Enum.SortOrder.LayoutOrder
+	uiList.Padding = UDim.new(0, 10)
+	uiList.Parent = main
 
-    -- Tab contents container
-    local contentContainer = Instance.new("Frame")
-    contentContainer.Size = UDim2.new(1, 0, 1, -30)
-    contentContainer.Position = UDim2.new(0, 0, 0, 30)
-    contentContainer.BackgroundTransparency = 1
-    contentContainer.Parent = tabsFolder
+	local titleLabel = Instance.new("TextLabel")
+	titleLabel.Size = UDim2.new(1, 0, 0, 44)
+	titleLabel.BackgroundTransparency = 1
+	titleLabel.Text = title or "Goo UI"
+	titleLabel.Font = Enum.Font.GothamBlack
+	titleLabel.TextColor3 = Color3.fromRGB(0, 170, 255)
+	titleLabel.TextSize = 24
+	titleLabel.ZIndex = 11
+	titleLabel.Parent = main
 
-    GooUILib._tabs = {bar = tabBar, content = contentContainer}
-    return setmetatable({main = main}, {__index = GooUILib})
+	GooUILib:MakeDraggable(main)
+
+	return main, screenGui
 end
 
-function GooUILib:NewTab(name)
-    local tabBtn = Instance.new("TextButton")
-    tabBtn.Text = name
-    tabBtn.Font = Enum.Font.Gotham
-    tabBtn.TextColor3 = Color3.new(1, 1, 1)
-    tabBtn.TextSize = 14
-    tabBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    tabBtn.Size = UDim2.new(0, 100, 1, 0)
-    tabBtn.Parent = self._tabs.bar
+-- Create Slider
+function GooUILib:CreateSlider(parent, name, min, max, default, callback)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -10, 0, 50)
+	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	frame.BorderSizePixel = 0
+	frame.Parent = parent
 
-    local tabFrame = Instance.new("Frame")
-    tabFrame.Size = UDim2.new(1, -10, 1, -10)
-    tabFrame.Position = UDim2.new(0, 5, 0, 5)
-    tabFrame.BackgroundTransparency = 1
-    tabFrame.Visible = false
-    tabFrame.Parent = self._tabs.content
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -20, 0, 20)
+	label.Position = UDim2.new(0, 10, 0, 5)
+	label.BackgroundTransparency = 1
+	label.Text = name .. ": " .. tostring(default)
+	label.Font = Enum.Font.Gotham
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextSize = 14
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = frame
 
-    tabFrame.Layout = Instance.new("UIListLayout")
-    tabFrame.Layout.Padding = UDim.new(0, 6)
+	local bar = Instance.new("Frame")
+	bar.Size = UDim2.new(1, -20, 0, 8)
+	bar.Position = UDim2.new(0, 10, 0, 30)
+	bar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+	bar.BorderSizePixel = 0
+	bar.Parent = frame
 
-    tabBtn.MouseButton1Click:Connect(function()
-        for _,fr in ipairs(self._tabs.content:GetChildren()) do
-            if fr:IsA("Frame") then fr.Visible = false end
-        end
-        tabFrame.Visible = true
-        for _,tb in ipairs(self._tabs.bar:GetChildren()) do
-            if tb:IsA("TextButton") then
-                tb.BackgroundColor3 = Color3.fromRGB(50,50,50)
-            end
-        end
-        tabBtn.BackgroundColor3 = Color3.fromRGB(70,70,70)
-    end)
+	local fill = Instance.new("Frame")
+	fill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+	fill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+	fill.BorderSizePixel = 0
+	fill.Parent = bar
 
-    return setmetatable({frame = tabFrame}, {__index = GooUILib})
+	local dragging = false
+
+	local function update(input)
+		local rel = (input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
+		rel = math.clamp(rel, 0, 1)
+		local val = math.floor((min + (max - min) * rel) + 0.5)
+		fill.Size = UDim2.new(rel, 0, 1, 0)
+		label.Text = name .. ": " .. tostring(val)
+		callback(val)
+	end
+
+	bar.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			update(input)
+		end
+	end)
+
+	bar.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = false
+		end
+	end)
+
+	game:GetService("UserInputService").InputChanged:Connect(function(input)
+		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+			update(input)
+		end
+	end)
 end
 
+-- Create Dropdown
+function GooUILib:CreateDropdown(parent, name, options, callback)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -10, 0, 40)
+	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	frame.BorderSizePixel = 0
+	frame.Parent = parent
+
+	local label = Instance.new("TextButton")
+	label.Size = UDim2.new(1, -20, 1, 0)
+	label.Position = UDim2.new(0, 10, 0, 0)
+	label.BackgroundTransparency = 1
+	label.Text = name .. ": " .. options[1]
+	label.Font = Enum.Font.Gotham
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextSize = 14
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = frame
+
+	local open = false
+	local dropdown = Instance.new("Frame")
+	dropdown.Size = UDim2.new(1, -10, 0, #options * 25)
+	dropdown.Position = UDim2.new(0, 10, 1, 0)
+	dropdown.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	dropdown.BorderSizePixel = 0
+	dropdown.Visible = false
+	dropdown.Parent = frame
+
+	local list = Instance.new("UIListLayout")
+	list.SortOrder = Enum.SortOrder.LayoutOrder
+	list.Padding = UDim.new(0, 2)
+	list.Parent = dropdown
+
+	for _, opt in ipairs(options) do
+		local btn = Instance.new("TextButton")
+		btn.Size = UDim2.new(1, 0, 0, 24)
+		btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		btn.Text = opt
+		btn.Font = Enum.Font.Gotham
+		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		btn.TextSize = 14
+		btn.Parent = dropdown
+
+		btn.MouseButton1Click:Connect(function()
+			label.Text = name .. ": " .. opt
+			dropdown.Visible = false
+			open = false
+			callback(opt)
+		end)
+	end
+
+	label.MouseButton1Click:Connect(function()
+		open = not open
+		dropdown.Visible = open
+	end)
+end
+
+-- Create Tabs
+function GooUILib:CreateTabs(parent, tabNames)
+	local tabFrame = Instance.new("Frame")
+	tabFrame.Size = UDim2.new(1, 0, 0, 36)
+	tabFrame.BackgroundTransparency = 1
+	tabFrame.Parent = parent
+
+	local tabButtons = {}
+	local tabPages = {}
+	local selectedTab = nil
+
+	local buttonHolder = Instance.new("Frame")
+	buttonHolder.Size = UDim2.new(1, 0, 0, 36)
+	buttonHolder.BackgroundTransparency = 1
+	buttonHolder.Parent = tabFrame
+
+	local buttonList = Instance.new("UIListLayout")
+	buttonList.FillDirection = Enum.FillDirection.Horizontal
+	buttonList.SortOrder = Enum.SortOrder.LayoutOrder
+	buttonList.Padding = UDim.new(0, 6)
+	buttonList.Parent = buttonHolder
+
+	for i, tabName in ipairs(tabNames) do
+		local btn = Instance.new("TextButton")
+		btn.Size = UDim2.new(0, 80, 1, 0)
+		btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		btn.Text = tabName
+		btn.Font = Enum.Font.GothamBold
+		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		btn.TextSize = 15
+		btn.AutoButtonColor = true
+		btn.Parent = buttonHolder
+
+		local page = Instance.new("Frame")
+		page.Size = UDim2.new(1, 0, 1, -36)
+		page.Position = UDim2.new(0, 0, 0, 36)
+		page.BackgroundTransparency = 1
+		page.Visible = false
+		page.Parent = parent
+
+		tabButtons[tabName] = btn
+		tabPages[tabName] = page
+
+		btn.MouseButton1Click:Connect(function()
+			for _, p in pairs(tabPages) do p.Visible = false end
+			for _, b in pairs(tabButtons) do b.BackgroundColor3 = Color3.fromRGB(40, 40, 40) end
+			page.Visible = true
+			btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+			selectedTab = tabName
+		end)
+	end
+
+	-- Select first tab by default
+	if tabNames[1] then
+		tabButtons[tabNames[1]].BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+		tabPages[tabNames[1]].Visible = true
+		selectedTab = tabNames[1]
+	end
+
+	return tabPages, function(tabName)
+		if tabPages[tabName] then
+			for _, p in pairs(tabPages) do p.Visible = false end
+			for _, b in pairs(tabButtons) do b.BackgroundColor3 = Color3.fromRGB(40, 40, 40) end
+			tabPages[tabName].Visible = true
+			tabButtons[tabName].BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+			selectedTab = tabName
+		end
+	end
+end
+
+-- Create Button
 function GooUILib:CreateButton(parent, name, callback)
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 30)
-    btn.Text = name
-    btn.Font = Enum.Font.Gotham
-    btn.TextColor3 = Color3.new(1, 1, 1)
-    btn.TextSize = 14
-    btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-    btn.Parent = parent
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(1, -20, 0, 36)
+	btn.Position = UDim2.new(0, 10, 0, 0)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+	btn.Text = name
+	btn.Font = Enum.Font.GothamBold
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.TextSize = 16
+	btn.AutoButtonColor = false
+	btn.Parent = parent
 
-    btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(80,80,80)}):Play()
-    end)
-    btn.MouseLeave:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60,60,60)}):Play()
-    end)
-    btn.MouseButton1Click:Connect(callback)
+	local uicorner = Instance.new("UICorner")
+	uicorner.CornerRadius = UDim.new(0, 8)
+	uicorner.Parent = btn
+
+	btn.MouseEnter:Connect(function()
+		game:GetService("TweenService"):Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(0, 200, 255)}):Play()
+	end)
+	btn.MouseLeave:Connect(function()
+		game:GetService("TweenService"):Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(0, 170, 255)}):Play()
+	end)
+
+	btn.MouseButton1Click:Connect(function()
+		callback()
+	end)
+
+	return btn
 end
 
+-- Create Toggle
 function GooUILib:CreateToggle(parent, name, default, callback)
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 0, 30)
-    frame.BackgroundTransparency = 1
-    frame.Parent = parent
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -10, 0, 36)
+	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	frame.BorderSizePixel = 0
+	frame.Parent = parent
 
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0.6, 0, 1, 0)
-    label.Text = name
-    label.Font = Enum.Font.Gotham
-    label.TextColor3 = Color3.new(1,1,1)
-    label.TextSize = 14
-    label.BackgroundTransparency = 1
-    label.Parent = frame
+	local uicorner = Instance.new("UICorner")
+	uicorner.CornerRadius = UDim.new(0, 8)
+	uicorner.Parent = frame
 
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 40, 0, 20)
-    btn.Position = UDim2.new(1, -45, 0.5, -10)
-    btn.Text = default and "✔" or ""
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14
-    btn.BackgroundColor3 = Color3.fromRGB(80,80,80)
-    btn.Parent = frame
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -50, 1, 0)
+	label.Position = UDim2.new(0, 10, 0, 0)
+	label.BackgroundTransparency = 1
+	label.Text = name
+	label.Font = Enum.Font.Gotham
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextSize = 15
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = frame
 
-    local state = default
-    btn.MouseButton1Click:Connect(function()
-        state = not state
-        btn.Text = state and "✔" or ""
-        callback(state)
-    end)
+	local toggle = Instance.new("TextButton")
+	toggle.Size = UDim2.new(0, 36, 0, 20)
+	toggle.Position = UDim2.new(1, -46, 0.5, -10)
+	toggle.BackgroundColor3 = default and Color3.fromRGB(0, 170, 255) or Color3.fromRGB(70, 70, 70)
+	toggle.Text = default and "ON" or "OFF"
+	toggle.Font = Enum.Font.GothamBold
+	toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	toggle.TextSize = 13
+	toggle.Parent = frame
+
+	local toggleCorner = Instance.new("UICorner")
+	toggleCorner.CornerRadius = UDim.new(1, 0)
+	toggleCorner.Parent = toggle
+
+	local state = default
+	toggle.MouseButton1Click:Connect(function()
+		state = not state
+		toggle.Text = state and "ON" or "OFF"
+		game:GetService("TweenService"):Create(toggle, TweenInfo.new(0.15), {BackgroundColor3 = state and Color3.fromRGB(0, 170, 255) or Color3.fromRGB(70, 70, 70)}):Play()
+		callback(state)
+	end)
+
+	return frame, function(val)
+		state = val
+		toggle.Text = state and "ON" or "OFF"
+		toggle.BackgroundColor3 = state and Color3.fromRGB(0, 170, 255) or Color3.fromRGB(70, 70, 70)
+	end
 end
 
--- Include your slider and dropdown from original module here...
+-- Create TextBox
+function GooUILib:CreateTextBox(parent, name, default, callback)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -10, 0, 38)
+	frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	frame.BorderSizePixel = 0
+	frame.Parent = parent
+
+	local uicorner = Instance.new("UICorner")
+	uicorner.CornerRadius = UDim.new(0, 8)
+	uicorner.Parent = frame
+
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(0.4, -10, 1, 0)
+	label.Position = UDim2.new(0, 10, 0, 0)
+	label.BackgroundTransparency = 1
+	label.Text = name
+	label.Font = Enum.Font.Gotham
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextSize = 15
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = frame
+
+	local box = Instance.new("TextBox")
+	box.Size = UDim2.new(0.6, -20, 1, -8)
+	box.Position = UDim2.new(0.4, 10, 0, 4)
+	box.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	box.Text = default or ""
+	box.Font = Enum.Font.Gotham
+	box.TextColor3 = Color3.fromRGB(255, 255, 255)
+	box.TextSize = 15
+	box.ClearTextOnFocus = false
+	box.Parent = frame
+
+	local boxCorner = Instance.new("UICorner")
+	boxCorner.CornerRadius = UDim.new(0, 6)
+	boxCorner.Parent = box
+
+	box.FocusLost:Connect(function(enter)
+		if enter then
+			callback(box.Text)
+		end
+	end)
+
+	return frame, box
+end
+
+-- Make Main Window Draggable
+function GooUILib:MakeDraggable(frame)
+	local UIS = game:GetService("UserInputService")
+	local dragging, dragInput, dragStart, startPos
+
+	frame.Active = true
+	frame.Selectable = true
+
+	frame.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			dragStart = input.Position
+			startPos = frame.Position
+			dragInput = input
+		end
+	end)
+
+	frame.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = false
+		end
+	end)
+
+	UIS.InputChanged:Connect(function(input)
+		if dragging and input == dragInput then
+			local delta = input.Position - dragStart
+			frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		end
+	end)
+end
+
+-- Notification/Toast system
+function GooUILib:Notify(screenGui, text, duration)
+	duration = duration or 2
+	local toast = Instance.new("Frame")
+	toast.Size = UDim2.new(0, 220, 0, 38)
+	toast.Position = UDim2.new(1, -240, 1, -60)
+	toast.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	toast.BackgroundTransparency = 0.1
+	toast.BorderSizePixel = 0
+	toast.ZIndex = 100
+	toast.Parent = screenGui
+
+	local uicorner = Instance.new("UICorner")
+	uicorner.CornerRadius = UDim.new(0, 10)
+	uicorner.Parent = toast
+
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -16, 1, 0)
+	label.Position = UDim2.new(0, 8, 0, 0)
+	label.BackgroundTransparency = 1
+	label.Text = text
+	label.Font = Enum.Font.Gotham
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextSize = 16
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.ZIndex = 101
+	label.Parent = toast
+
+	-- Fade in
+	toast.BackgroundTransparency = 1
+	label.TextTransparency = 1
+	local TweenService = game:GetService("TweenService")
+	TweenService:Create(toast, TweenInfo.new(0.2), {BackgroundTransparency = 0.1}):Play()
+	TweenService:Create(label, TweenInfo.new(0.2), {TextTransparency = 0}):Play()
+
+	task.spawn(function()
+		task.wait(duration)
+		TweenService:Create(toast, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+		TweenService:Create(label, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+		task.wait(0.3)
+		toast:Destroy()
+	end)
+end
 
 return GooUILib
+
