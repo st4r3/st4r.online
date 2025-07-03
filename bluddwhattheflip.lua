@@ -145,7 +145,7 @@ Toggle.Position = UDim2.new(0, 5, 0, -2)
 Toggle.Rotation = 90
 Toggle.Size = UDim2.new(0, 20, 0, 20)
 Toggle.ZIndex = 2
-Toggle.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4731371541"
+Toggle.Image = "rbxassetid://4731371541"
 
 Base.Name = "Base"
 Base.Parent = Bar
@@ -350,7 +350,7 @@ Indicator_2.Position = UDim2.new(0.899999976, -10, 0.100000001, 0)
 Indicator_2.Rotation = -90
 Indicator_2.Size = UDim2.new(0, 15, 0, 15)
 Indicator_2.ZIndex = 2
-Indicator_2.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4744658743"
+Indicator_2.Image = "rbxassetid://4744658743"
 
 Box.Name = "Box"
 Box.Parent = Dropdown
@@ -452,7 +452,7 @@ Toggle_2.BackgroundColor3 = Color3.new(1, 1, 1)
 Toggle_2.BackgroundTransparency = 1
 Toggle_2.Position = UDim2.new(0, 5, 0, 0)
 Toggle_2.Size = UDim2.new(0, 20, 0, 20)
-Toggle_2.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4731371541"
+Toggle_2.Image = "rbxassetid://4731371541"
 
 Objects_2.Name = "Objects"
 Objects_2.Parent = Folder
@@ -2021,4 +2021,128 @@ function library:AddWindow(title, options)
 
 	return window_data, Window
 end
+
+-- Add Blur Effect to Background
+local blur = Instance.new("BlurEffect")
+blur.Size = 12
+blur.Parent = game:GetService("Lighting")
+imgui:GetPropertyChangedSignal("Enabled"):Connect(function()
+    blur.Enabled = imgui.Enabled
+end)
+
+-- Helper: Create Drop Shadow
+local function addDropShadow(guiObject, radius, transparency)
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "DropShadow"
+    shadow.Image = "rbxassetid://2851929490"
+    shadow.BackgroundTransparency = 1
+    shadow.Size = UDim2.new(1, 20, 1, 20)
+    shadow.Position = UDim2.new(0, -10, 0, -10)
+    shadow.ImageTransparency = transparency or 0.5
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(20, 20, 180, 180)
+    shadow.ZIndex = guiObject.ZIndex - 1
+    shadow.Parent = guiObject
+    guiObject.ClipsDescendants = false
+end
+
+-- Helper: Add Tooltip
+local function addTooltip(guiObject, text)
+    local tooltip = Instance.new("TextLabel")
+    tooltip.Text = text
+    tooltip.BackgroundTransparency = 0.2
+    tooltip.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    tooltip.TextColor3 = Color3.new(1, 1, 1)
+    tooltip.TextSize = 13
+    tooltip.Font = Enum.Font.Gotham
+    tooltip.Visible = false
+    tooltip.Size = UDim2.new(0, 120, 0, 24)
+    tooltip.Position = UDim2.new(0, 0, 1, 4)
+    tooltip.ZIndex = guiObject.ZIndex + 100
+    tooltip.Parent = guiObject
+    guiObject.MouseEnter:Connect(function()
+        tooltip.Visible = true
+    end)
+    guiObject.MouseLeave:Connect(function()
+        tooltip.Visible = false
+    end)
+end
+
+-- Helper: Add Notification System
+local notifications = Instance.new("Frame")
+notifications.Name = "Notifications"
+notifications.Parent = imgui
+notifications.BackgroundTransparency = 1
+notifications.Size = UDim2.new(0, 300, 0, 200)
+notifications.Position = UDim2.new(1, -320, 0, 40)
+notifications.ZIndex = 9999
+local notifLayout = Instance.new("UIListLayout")
+notifLayout.Parent = notifications
+notifLayout.SortOrder = Enum.SortOrder.LayoutOrder
+notifLayout.Padding = UDim.new(0, 8)
+function ShowNotification(msg, duration)
+    duration = duration or 2
+    local notif = Instance.new("TextLabel")
+    notif.Text = msg
+    notif.BackgroundTransparency = 0.2
+    notif.BackgroundColor3 = Color3.fromRGB(41, 74, 122)
+    notif.TextColor3 = Color3.new(1, 1, 1)
+    notif.TextSize = 15
+    notif.Font = Enum.Font.GothamBold
+    notif.Size = UDim2.new(1, 0, 0, 32)
+    notif.ZIndex = 10000
+    notif.Parent = notifications
+    addDropShadow(notif, 8, 0.7)
+    task.spawn(function()
+        wait(duration)
+        notif:Destroy()
+    end)
+end
+
+-- Add Close Button to Windows
+function library:AddWindow(title, options)
+    -- ... existing code ...
+    local Window = Prefabs:FindFirstChild("Window"):Clone()
+    -- ... existing code ...
+    -- Add close button
+    local closeBtn = Instance.new("ImageButton")
+    closeBtn.Name = "CloseButton"
+    closeBtn.Image = "rbxassetid://6035047409"
+    closeBtn.Size = UDim2.new(0, 20, 0, 20)
+    closeBtn.Position = UDim2.new(1, -28, 0, 2)
+    closeBtn.BackgroundTransparency = 1
+    closeBtn.ZIndex = Window.ZIndex + 1
+    closeBtn.Parent = Window
+    addTooltip(closeBtn, "Close window")
+    closeBtn.MouseButton1Click:Connect(function()
+        Window:Destroy()
+        ShowNotification(title .. " closed", 1.5)
+    end)
+    -- Add drop shadow to window
+    addDropShadow(Window, 12, 0.4)
+    -- ... rest of AddWindow ...
+
+    -- Add hover/click effects to all buttons
+    local function addButtonEffects(btn)
+        if btn:IsA("TextButton") or btn:IsA("ImageButton") then
+            btn.MouseEnter:Connect(function()
+                btn.BackgroundTransparency = 0.05
+            end)
+            btn.MouseLeave:Connect(function()
+                btn.BackgroundTransparency = 0.1
+            end)
+            btn.MouseButton1Down:Connect(function()
+                btn.BackgroundTransparency = 0.2
+            end)
+            btn.MouseButton1Up:Connect(function()
+                btn.BackgroundTransparency = 0.05
+            end)
+        end
+    end
+    for _,obj in ipairs(Prefabs:GetDescendants()) do
+        addButtonEffects(obj)
+    end
+    -- ... existing code ...
+end
+
 return library
