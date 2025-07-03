@@ -3,6 +3,11 @@ ui_options = {
 	min_size = Vector2.new(400, 300),
 	toggle_key = Enum.KeyCode.RightShift,
 	can_resize = true,
+	background_color = Color3.fromRGB(30, 32, 36),
+	border_color = Color3.fromRGB(60, 60, 60),
+	border_radius = 8,
+	shadow = true,
+	font = Enum.Font.Gotham,
 }
 
 do
@@ -1996,6 +2001,163 @@ function library:AddWindow(title, options)
 						end
 
 						return folder_data, folder
+					end
+
+					-- Multi-Select Dropdown
+					function tab_data:AddMultiSelectDropdown(dropdown_name, callback)
+					    local msd_data = {}
+					    dropdown_name = tostring(dropdown_name or "Multi-Select Dropdown")
+					    callback = typeof(callback) == "function" and callback or function()end
+
+					    local dropdown = Prefabs:FindFirstChild("Dropdown"):Clone()
+					    dropdown.Text = "      " .. dropdown_name
+					    dropdown.Parent = new_tab
+					    local box = dropdown:FindFirstChild("Box")
+					    local objects = box:FindFirstChild("Objects")
+					    local indicator = dropdown:FindFirstChild("Indicator")
+					    local open = false
+					    local selected = {}
+					    box.Size = UDim2.new(1, 0, 0, 0)
+
+					    dropdown.MouseButton1Click:Connect(function()
+					        open = not open
+					        local len = (#objects:GetChildren() - 1) * 20
+					        if #objects:GetChildren() - 1 >= 10 then
+					            len = 10 * 20
+					            objects.CanvasSize = UDim2.new(0, 0, (#objects:GetChildren() - 1) * 0.1, 0)
+					        end
+					        if open then
+					            Resize(box, {Size = UDim2.new(1, 0, 0, len)}, 0.1)
+					            Resize(indicator, {Rotation = 90}, 0.1)
+					        else
+					            Resize(box, {Size = UDim2.new(1, 0, 0, 0)}, 0.1)
+					            Resize(indicator, {Rotation = -90}, 0.1)
+					        end
+					    end)
+
+					    function msd_data:Add(option)
+					        local object = Prefabs:FindFirstChild("DropdownButton"):Clone()
+					        object.Parent = objects
+					        object.Text = option
+					        object.ZIndex = object.ZIndex + (windows * 10)
+					        local isSelected = false
+					        object.MouseButton1Click:Connect(function()
+					            isSelected = not isSelected
+					            selected[option] = isSelected or nil
+					            if isSelected then
+					                object.Text = "[x] " .. option
+					            else
+					                object.Text = option
+					            end
+					            local selList = {}
+					            for k,v in pairs(selected) do if v then table.insert(selList, k) end end
+					            dropdown.Text = "      [ " .. table.concat(selList, ", ") .. " ]"
+					            pcall(callback, selList)
+					        end)
+					        return object
+					    end
+
+					    function msd_data:GetSelected()
+					        local selList = {}
+					        for k,v in pairs(selected) do if v then table.insert(selList, k) end end
+					        return selList
+					    end
+
+					    return msd_data, dropdown
+					end
+
+					-- Checkbox
+					function tab_data:AddCheckbox(label, callback)
+					    label = tostring(label or "Checkbox")
+					    callback = typeof(callback) == "function" and callback or function()end
+					    local btn = Prefabs:FindFirstChild("Button"):Clone()
+					    btn.Text = "[ ] " .. label
+					    btn.Parent = new_tab
+					    local checked = false
+					    btn.MouseButton1Click:Connect(function()
+					        checked = not checked
+					        btn.Text = (checked and "[x] " or "[ ] ") .. label
+					        pcall(callback, checked)
+					    end)
+					    return btn
+					end
+
+					-- Radio Button
+					function tab_data:AddRadioButton(label, group, callback)
+					    label = tostring(label or "Radio")
+					    group = group or "default"
+					    callback = typeof(callback) == "function" and callback or function()end
+					    _G.__imgui_radio_groups = _G.__imgui_radio_groups or {}
+					    _G.__imgui_radio_groups[group] = _G.__imgui_radio_groups[group] or {}
+					    local btn = Prefabs:FindFirstChild("Button"):Clone()
+					    btn.Text = "( ) " .. label
+					    btn.Parent = new_tab
+					    btn.MouseButton1Click:Connect(function()
+					        for _,b in pairs(_G.__imgui_radio_groups[group]) do
+					            b.Text = "( ) " .. b.Text:match("[^ ]+$")
+					        end
+					        btn.Text = "(x) " .. label
+					        pcall(callback, label)
+					    end)
+					    table.insert(_G.__imgui_radio_groups[group], btn)
+					    return btn
+					end
+
+					-- Progress Bar
+					function tab_data:AddProgressBar(percent)
+					    percent = math.clamp(tonumber(percent) or 0, 0, 100)
+					    local bar = Instance.new("Frame")
+					    bar.Size = UDim2.new(0, 200, 0, 20)
+					    bar.BackgroundColor3 = Color3.fromRGB(52, 53, 56)
+					    bar.Parent = new_tab
+					    local fill = Instance.new("Frame")
+					    fill.Size = UDim2.new(percent/100, 0, 1, 0)
+					    fill.BackgroundColor3 = ui_options.main_color
+					    fill.Parent = bar
+					    return bar, fill
+					end
+
+					-- Tooltip
+					function tab_data:AddTooltip(target, text)
+					    local tip = Instance.new("TextLabel")
+					    tip.Text = text or "Tooltip"
+					    tip.BackgroundTransparency = 0.2
+					    tip.BackgroundColor3 = Color3.fromRGB(60,60,60)
+					    tip.TextColor3 = Color3.new(1,1,1)
+					    tip.Visible = false
+					    tip.Size = UDim2.new(0, 150, 0, 30)
+					    tip.Position = UDim2.new(0, 0, 0, -35)
+					    tip.Parent = target
+					    target.MouseEnter:Connect(function() tip.Visible = true end)
+					    target.MouseLeave:Connect(function() tip.Visible = false end)
+					    return tip
+					end
+
+					-- Image
+					function tab_data:AddImage(url, size)
+					    local img = Instance.new("ImageLabel")
+					    img.Image = url or ""
+					    img.Size = size or UDim2.new(0, 64, 0, 64)
+					    img.BackgroundTransparency = 1
+					    img.Parent = new_tab
+					    return img
+					end
+
+					-- Multi-line TextBox
+					function tab_data:AddMultiLineTextBox(placeholder, callback)
+					    placeholder = tostring(placeholder or "Multi-line Text")
+					    callback = typeof(callback) == "function" and callback or function()end
+					    local tb = Prefabs:FindFirstChild("TextBox"):Clone()
+					    tb.MultiLine = true
+					    tb.PlaceholderText = placeholder
+					    tb.Size = UDim2.new(1, 0, 0, 60)
+					    tb.Parent = new_tab
+					    tb.FocusLost:Connect(function(ep)
+					        if ep and #tb.Text > 0 then
+					            pcall(callback, tb.Text)
+					        end
+					    end)
+					    return tb
 					end
 
 				end
